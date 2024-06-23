@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -8,7 +8,11 @@ import {
   ScrollView,
 } from "react-native";
 import FeatherIcon from "react-native-vector-icons/Feather";
+import { AreaApi, AreaOut, PlantApi, PlantOut } from "~/api";
+import PlantCount from "~/components/index/plantCount";
 import { Text } from "~/components/ui/text";
+import { getToken } from "~/core/auth/utils";
+import axiosInstance from "~/provider/custom-axios";
 const categories = [
   [
     {
@@ -49,48 +53,65 @@ const categories = [
 ];
 
 export default function Index() {
-  return (
-    <SafeAreaView
-      className="bg-background dark:bg-background"
-      style={styles.container}
-    >
-      <View style={styles.top}>
-        <View style={styles.header}>
-          <TouchableOpacity
-            onPress={() => {
-              // handle onPress
-            }}
-          >
-            <FeatherIcon name="menu" size={24} color="#1a2525" />
-          </TouchableOpacity>
+  const token = getToken();
 
-          <TouchableOpacity
-            onPress={() => {
-              // handle onPress
-            }}
-          >
-            <Image
-              style={styles.headerImage}
-              source={{
-                uri: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2.5&w=256&h=256&q=80",
-              }}
-            />
-          </TouchableOpacity>
-        </View>
-      </View>
+  const [areaData, setAreaData] = useState<AreaOut[]>([]);
+  const [plantData, setPlantData] = useState<PlantOut[]>([]);
+  const [graveyardData, setGraveyardData] = useState<PlantOut[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      const api = new PlantApi(undefined, undefined, axiosInstance);
+      const areaApi = new AreaApi(undefined, undefined, axiosInstance);
+      // get alive plants
+      try {
+        const response = await api.trackerApiViewPlantListPlants(true, false);
+        if (response.status === 200) {
+          setPlantData(response.data);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+      // get graveyard
+      try {
+        const response = await api.trackerApiViewPlantListPlants(false, true);
+        if (response.status === 200) {
+          setGraveyardData(response.data);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+      // get area data
+      try {
+        const areaResponse = await areaApi.trackerApiViewAreaListAreas();
+        if (areaResponse.status === 200) {
+          setAreaData(areaResponse.data);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+      setIsLoading(false);
+    };
+    fetchData();
+  }, []);
+
+  if (isLoading) {
+    return <Text>Loading</Text>;
+  }
+
+  return (
+    <SafeAreaView className="bg-background flex-1">
+      <View style={styles.top}></View>
       <ScrollView>
-        <View style={styles.topContent}>
-          <TouchableOpacity
-            onPress={() => {
-              // handle onPress
-            }}
-          >
-            <View style={styles.banner}>
-              <Text>🤑</Text>
-              <Text style={styles.bannerText}>Invite friends, earn $5,000</Text>
-              <FeatherIcon name="arrow-right" size={20} color="#fff" />
-            </View>
-          </TouchableOpacity>
+        <View className="justify-end ">
+          <Text className="my-3 text-center text-5xl font-bold">
+            {token?.first_name}'s Plants
+          </Text>
+          <PlantCount plantData={plantData} graveyardData={graveyardData} />
+        </View>
+        <View className="px-8">
           <View style={styles.categories}>
             {categories.map((row, index) => (
               <View style={styles.categoriesRow} key={index}>
@@ -129,17 +150,12 @@ export default function Index() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   /** Top */
   top: {
     paddingHorizontal: 24,
     paddingVertical: 8,
   },
-  topContent: {
-    paddingHorizontal: 24,
-  },
+
   /** Header */
   header: {
     flexDirection: "row",
