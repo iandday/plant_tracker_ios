@@ -1,88 +1,147 @@
-import { cva, type VariantProps } from 'class-variance-authority';
-import * as React from 'react';
-import { Pressable } from 'react-native';
-import { TextClassContext } from '~/components/ui/text';
-import { cn } from '~/lib/utils';
+import React from "react";
+import type { PressableProps, View } from "react-native";
+import { ActivityIndicator, Pressable, Text } from "react-native";
+import type { VariantProps } from "tailwind-variants";
+import { tv } from "tailwind-variants";
 
-const buttonVariants = cva(
-  'group flex items-center justify-center rounded-md web:ring-offset-background web:transition-colors web:focus-visible:outline-none web:focus-visible:ring-2 web:focus-visible:ring-ring web:focus-visible:ring-offset-2',
-  {
-    variants: {
-      variant: {
-        default: 'bg-primary web:hover:opacity-90 active:opacity-90',
-        destructive: 'bg-destructive web:hover:opacity-90 active:opacity-90',
-        outline:
-          'border border-input bg-background web:hover:bg-accent web:hover:text-accent-foreground active:bg-accent',
-        secondary: 'bg-secondary web:hover:opacity-80 active:opacity-80',
-        ghost: 'web:hover:bg-accent web:hover:text-accent-foreground active:bg-accent',
-        link: 'web:underline-offset-4 web:hover:underline web:focus:underline ',
-      },
-      size: {
-        default: 'h-10 px-4 py-2 native:h-12 native:px-5 native:py-3',
-        sm: 'h-9 rounded-md px-3',
-        lg: 'h-11 rounded-md px-8 native:h-14',
-        icon: 'h-10 w-10',
-      },
-    },
-    defaultVariants: {
-      variant: 'default',
-      size: 'default',
-    },
-  }
-);
+const button = tv({
+  slots: {
+    container:
+      "my-2  flex flex-row items-center justify-center rounded-xl px-4 border-border",
+    label: "text-base font-semibold",
+    indicator: "h-6 text-white",
+  },
 
-const buttonTextVariants = cva(
-  'web:whitespace-nowrap text-sm native:text-base font-medium text-foreground web:transition-colors',
-  {
-    variants: {
-      variant: {
-        default: 'text-primary-foreground',
-        destructive: 'text-destructive-foreground',
-        outline: 'group-active:text-accent-foreground',
-        secondary: 'text-secondary-foreground group-active:text-secondary-foreground',
-        ghost: 'group-active:text-accent-foreground',
-        link: 'text-primary group-active:underline',
+  variants: {
+    variant: {
+      default: {
+        container: "bg-primary",
+        label: "text-primary-foreground",
+        indicator: "text-primary-foreground",
       },
-      size: {
-        default: '',
-        sm: '',
-        lg: 'native:text-lg',
-        icon: '',
+      secondary: {
+        container: "bg-primary-600",
+        label: "text-secondary-600",
+        indicator: "text-white",
+      },
+      outline: {
+        container: "border border-neutral-400",
+        label: "text-foreground",
+        indicator: "text-foreground",
+      },
+      destructive: {
+        container: "bg-red-600",
+        label: "text-white",
+        indicator: "text-white",
+      },
+      ghost: {
+        container: "bg-transparent",
+        label: "text-black underline dark:text-white",
+        indicator: "text-black dark:text-white",
+      },
+      link: {
+        container: "bg-transparent",
+        label: "text-black",
+        indicator: "text-black",
       },
     },
-    defaultVariants: {
-      variant: 'default',
-      size: 'default',
+    size: {
+      default: {
+        container: "h-10 px-4",
+        label: "text-base",
+      },
+      lg: {
+        container: "h-12 px-8",
+        label: "text-xl",
+      },
+      sm: {
+        container: "h-8 px-3",
+        label: "text-sm",
+        indicator: "h-2",
+      },
+      icon: { container: "h-9 w-9" },
     },
-  }
-);
+    disabled: {
+      true: {
+        container: "bg-neutral-300 dark:bg-neutral-300",
+        label: "text-neutral-600 dark:text-neutral-600",
+        indicator: "text-neutral-400 dark:text-neutral-400",
+      },
+    },
+    fullWidth: {
+      true: {
+        container: "",
+      },
+      false: {
+        container: "justify-self-center",
+      },
+    },
+  },
+  defaultVariants: {
+    variant: "default",
+    disabled: false,
+    fullWidth: true,
+    size: "default",
+  },
+});
 
-type ButtonProps = React.ComponentPropsWithoutRef<typeof Pressable> &
-  VariantProps<typeof buttonVariants>;
+type ButtonVariants = VariantProps<typeof button>;
+interface Props extends ButtonVariants, Omit<PressableProps, "disabled"> {
+  label?: string;
+  loading?: boolean;
+  className?: string;
+  textClassName?: string;
+}
 
-const Button = React.forwardRef<React.ElementRef<typeof Pressable>, ButtonProps>(
-  ({ className, variant, size, ...props }, ref) => {
+export const Button = React.forwardRef<View, Props>(
+  (
+    {
+      label: text,
+      loading = false,
+      variant = "default",
+      disabled = false,
+      size = "default",
+      className = "",
+      testID,
+      textClassName = "",
+      ...props
+    },
+    ref
+  ) => {
+    const styles = React.useMemo(
+      () => button({ variant, disabled, size }),
+      [variant, disabled, size]
+    );
+
     return (
-      <TextClassContext.Provider
-        value={cn(
-          props.disabled && 'web:pointer-events-none',
-          buttonTextVariants({ variant, size })
-        )}
+      <Pressable
+        disabled={disabled || loading}
+        className={styles.container({ className })}
+        {...props}
+        ref={ref}
+        testID={testID}
       >
-        <Pressable
-          className={cn(
-            props.disabled && 'opacity-50 web:pointer-events-none',
-            buttonVariants({ variant, size, className })
-          )}
-          ref={ref}
-          role='button'
-          {...props}
-        />
-      </TextClassContext.Provider>
+        {props.children ? (
+          props.children
+        ) : (
+          <>
+            {loading ? (
+              <ActivityIndicator
+                size="small"
+                className={styles.indicator()}
+                testID={testID ? `${testID}-activity-indicator` : undefined}
+              />
+            ) : (
+              <Text
+                testID={testID ? `${testID}-label` : undefined}
+                className={styles.label({ className: textClassName })}
+              >
+                {text}
+              </Text>
+            )}
+          </>
+        )}
+      </Pressable>
     );
   }
 );
-Button.displayName = 'Button';
-
-export { Button, buttonTextVariants, buttonVariants };
-export type { ButtonProps };

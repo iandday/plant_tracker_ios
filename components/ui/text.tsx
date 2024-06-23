@@ -1,24 +1,32 @@
-import * as Slot from '~/components/primitives/slot';
-import type { SlottableTextProps, TextRef } from '~/components/primitives/types';
-import * as React from 'react';
-import { Text as RNText } from 'react-native';
-import { cn } from '~/lib/utils';
+import React from "react";
+import type { TextProps, TextStyle } from "react-native";
+import { StyleSheet, Text as NNText } from "react-native";
+import { twMerge } from "tailwind-merge";
 
-const TextClassContext = React.createContext<string | undefined>(undefined);
+interface Props extends TextProps {
+  className?: string;
+  tx?: TxKeyPath;
+}
 
-const Text = React.forwardRef<TextRef, SlottableTextProps>(
-  ({ className, asChild = false, ...props }, ref) => {
-    const textClass = React.useContext(TextClassContext);
-    const Component = asChild ? Slot.Text : RNText;
-    return (
-      <Component
-        className={cn('text-base text-foreground web:select-text', textClass, className)}
-        ref={ref}
-        {...props}
-      />
-    );
-  }
-);
-Text.displayName = 'Text';
+export const Text = ({
+  className = "",
+  style,
+  tx,
+  children,
+  ...props
+}: Props) => {
+  const textStyle = React.useMemo(
+    () => twMerge("text-foreground", className),
+    [className]
+  );
 
-export { Text, TextClassContext };
+  const nStyle = React.useMemo(
+    () => StyleSheet.flatten([style]) as TextStyle,
+    [style]
+  );
+  return (
+    <NNText className={textStyle} style={nStyle} {...props}>
+      {children}
+    </NNText>
+  );
+};
