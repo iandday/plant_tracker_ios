@@ -9,9 +9,7 @@ import ActivityList from "~/components/plant-detail/activity-list";
 import PlantInfo from "~/components/plant-detail/plantInfo";
 import { PlantPhoto } from "~/components/plant-photo";
 import axiosInstance from "~/provider/custom-axios";
-import { View } from "react-native";
-import { Button } from "~/components/ui/button";
-import { Text } from "~/components/ui/text";
+import { Button, Text, View } from "~/components/ui";
 
 /* eslint-disable max-lines-per-function */
 export default function Plant() {

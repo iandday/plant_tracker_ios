@@ -1,20 +1,10 @@
 import React, { useEffect, useState } from "react";
-import {
-  StyleSheet,
-  View,
-  SafeAreaView,
-  TouchableOpacity,
-  Image,
-  ScrollView,
-} from "react-native";
-import FeatherIcon from "react-native-vector-icons/Feather";
 import { AreaApi, AreaOut, PlantApi, PlantOut } from "~/api";
 import PlantCount from "~/components/index/plantCount";
-import { Text } from "~/components/ui/text";
+import { Text, View, SafeAreaView, TouchableOpacity } from "~/components/ui";
 import { getToken } from "~/core/auth/utils";
 import axiosInstance from "~/provider/custom-axios";
 import { router } from "expo-router";
-
 import { FontAwesome6 } from "@expo/vector-icons";
 import { cssInterop } from "nativewind";
 

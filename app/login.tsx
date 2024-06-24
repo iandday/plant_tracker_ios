@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, { useCallback, useMemo, useRef } from "react";
 import { SafeAreaView, TextInput, View } from "react-native";
 import { UserApi } from "~/api";
 import { useAuth } from "~/core/auth";
@@ -12,8 +12,7 @@ import {
   BottomSheetBackdropProps,
 } from "@gorhom/bottom-sheet";
 import { LoginForm, LoginFormProps } from "~/components/login-form";
-import { Button } from "~/components/ui/button";
-import { Text } from "~/components/ui/text";
+import { Button, Text } from "~/components/ui";
 
 import colors from "tailwindcss/colors";
 import Animated, {

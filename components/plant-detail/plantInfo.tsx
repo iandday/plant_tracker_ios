@@ -1,9 +1,7 @@
 import React from "react";
 
 import type { AreaOut, PlantOut } from "~/api";
-
-import { Text } from "../ui/text";
-import { View } from "react-native";
+import { Text, View } from "~/components/ui";
 
 interface plantCountProps {
   plantData: PlantOut;

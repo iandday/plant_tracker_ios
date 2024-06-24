@@ -1,19 +1,9 @@
 import React, { useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {
-  StyleSheet,
-  SafeAreaView,
-  View,
-  ScrollView,
-  TouchableOpacity,
-  Switch,
-  Image,
-} from "react-native";
-import { setAndroidNavigationBar } from "~/lib/android-navigation-bar";
-import { useColorScheme } from "~/lib/useColorScheme";
+import { StyleSheet } from "react-native";
 import FeatherIcon from "react-native-vector-icons/Feather";
-import { Text } from "~/components/ui/text";
-import { Button } from "~/components/ui/button";
+import { Text, View, TouchableOpacity, SafeAreaView } from "~/components/ui";
+
 import Preferences from "~/components/settings/preferences";
 import Locations from "~/components/settings/locations";
 import Areas from "~/components/settings/areas";

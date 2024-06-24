@@ -2,11 +2,11 @@
 import { useRouter } from "expo-router";
 
 import React, { useEffect, useState } from "react";
-import { FlatList, StyleSheet, TouchableOpacity, View } from "react-native";
+import { FlatList, StyleSheet } from "react-native";
 import StarRating from "react-native-star-rating-widget";
 
 import type { ActivityOut, EntryOut } from "~/api";
-import { Text } from "../ui/text";
+import { Text, View, TouchableOpacity } from "~/components/ui";
 
 interface listProps {
   entryData: EntryOut[];
