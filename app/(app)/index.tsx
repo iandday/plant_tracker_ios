@@ -13,6 +13,7 @@ import PlantCount from "~/components/index/plantCount";
 import { Text } from "~/components/ui/text";
 import { getToken } from "~/core/auth/utils";
 import axiosInstance from "~/provider/custom-axios";
+import { router } from "expo-router";
 
 import { FontAwesome6 } from "@expo/vector-icons";
 import { cssInterop } from "nativewind";
@@ -21,18 +22,22 @@ const categories = [
   {
     name: "Plants",
     icon: "seedling",
+    action: () => router.navigate("/my-plants"),
   },
   {
     name: "Entries",
     icon: "hand-holding-heart",
+    action: () => router.navigate("/my-plants"),
   },
   {
     name: "Tasks",
     icon: "list",
+    action: () => router.navigate("/my-plants"),
   },
   {
     name: "Graveyard",
     icon: "skull-crossbones",
+    action: () => router.navigate("/my-plants"),
   },
 ];
 
@@ -116,9 +121,7 @@ export default function Index() {
                 <TouchableOpacity
                   className="flex-1, items-center px-4"
                   key={item.name}
-                  onPress={() => {
-                    // handle onPress
-                  }}
+                  onPress={item.action}
                 >
                   <FontAwesome6
                     name={item.icon}

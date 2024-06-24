@@ -12,7 +12,6 @@ import { PortalHost } from "~/components/primitives/portal";
 import { ThemeToggle } from "~/components/ThemeToggle";
 import { hydrateAuth } from "../core/auth";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import BottomSheet from "./bottomsheet";
 
 const LIGHT_THEME: Theme = {
   dark: false,
