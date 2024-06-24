@@ -13,43 +13,27 @@ import PlantCount from "~/components/index/plantCount";
 import { Text } from "~/components/ui/text";
 import { getToken } from "~/core/auth/utils";
 import axiosInstance from "~/provider/custom-axios";
+
+import { FontAwesome6 } from "@expo/vector-icons";
+import { cssInterop } from "nativewind";
+
 const categories = [
-  [
-    {
-      icon: "🏨",
-      name: "Hotels",
-    },
-    {
-      icon: "✈️",
-      name: "Airplanes",
-    },
-    {
-      icon: "🚙",
-      name: "Cars",
-    },
-    {
-      icon: "🏠",
-      name: "Homes",
-    },
-  ],
-  [
-    {
-      icon: "💵",
-      name: "Invite",
-    },
-    {
-      icon: "🏦",
-      name: "Finance",
-    },
-    {
-      icon: "💳",
-      name: "Wallet",
-    },
-    {
-      icon: "🌳",
-      name: "Trees",
-    },
-  ],
+  {
+    name: "Plants",
+    icon: "seedling",
+  },
+  {
+    name: "Entries",
+    icon: "hand-holding-heart",
+  },
+  {
+    name: "Tasks",
+    icon: "list",
+  },
+  {
+    name: "Graveyard",
+    icon: "skull-crossbones",
+  },
 ];
 
 export default function Index() {
@@ -59,6 +43,13 @@ export default function Index() {
   const [plantData, setPlantData] = useState<PlantOut[]>([]);
   const [graveyardData, setGraveyardData] = useState<PlantOut[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  cssInterop(FontAwesome6, {
+    className: {
+      target: "style",
+      nativeStyleToProp: { height: true, width: true, size: true },
+    },
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -102,154 +93,45 @@ export default function Index() {
   }
 
   return (
-    <SafeAreaView className="bg-background flex-1">
-      <View style={styles.top}></View>
-      <ScrollView>
-        <View className="justify-end ">
-          <Text className="my-3 text-center text-5xl font-bold">
+    <SafeAreaView className="bg-background flex flex-1 flex-col items-stretch p-5 m-5">
+      {/* Header */}
+      <View className="grow-0 h-600 ">
+        <View className="flex flex-col m-5">
+          <Text className="my-3 text-center text-5xl font-bold pb-5">
             {token?.first_name}'s Plants
           </Text>
           <PlantCount plantData={plantData} graveyardData={graveyardData} />
         </View>
-        <View className="px-8">
-          <View style={styles.categories}>
-            {categories.map((row, index) => (
-              <View style={styles.categoriesRow} key={index}>
-                {row.map((item) => (
-                  <TouchableOpacity
-                    style={styles.category}
-                    key={item.name}
-                    onPress={() => {
-                      // handle onPress
-                    }}
-                  >
-                    <View style={styles.categoryIcon}>
-                      <Text>{item.icon}</Text>
-                    </View>
-                    <Text>{item.name}</Text>
-                  </TouchableOpacity>
-                ))}
+      </View>
+      {/* Content */}
+      <View className="grow">
+        <Text>Content Here</Text>
+      </View>
+      {/* Footer */}
+      <View className="grow-0">
+        <View className="flex flex-row items-center justify-center">
+          {categories.map((item, index) => {
+            return (
+              <View className="bg-secondary rounded-full p-2 m-1">
+                <TouchableOpacity
+                  className="flex-1, items-center px-4"
+                  key={item.name}
+                  onPress={() => {
+                    // handle onPress
+                  }}
+                >
+                  <FontAwesome6
+                    name={item.icon}
+                    size={24}
+                    className="text-secondary-foreground"
+                  />
+                  <Text className="text-secondary-foreground">{item.name}</Text>
+                </TouchableOpacity>
               </View>
-            ))}
-          </View>
+            );
+          })}
         </View>
-        <View style={styles.content}>
-          <View style={styles.contentHeader}>
-            <Text style={styles.contentTitle}>Deals</Text>
-            <TouchableOpacity>
-              <Text style={styles.contentLink}>View all</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.contentPlaceholder}>
-            {/* Replace with your content */}
-          </View>
-        </View>
-      </ScrollView>
+      </View>
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  /** Top */
-  top: {
-    paddingHorizontal: 24,
-    paddingVertical: 8,
-  },
-
-  /** Header */
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  headerImage: {
-    width: 40,
-    height: 40,
-    borderRadius: 9999,
-  },
-  /** Banner */
-  banner: {
-    marginTop: 12,
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "flex-start",
-    backgroundColor: "#07a9e3",
-    padding: 16,
-    borderRadius: 16,
-  },
-  bannerText: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#fff",
-    marginLeft: 8,
-    marginRight: "auto",
-  },
-  /** Categories */
-  categories: {
-    marginTop: 12,
-  },
-  categoriesRow: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 12,
-    marginHorizontal: -4,
-  },
-  /** Category */
-  category: {
-    flex: 1,
-    alignItems: "center",
-    paddingHorizontal: 4,
-  },
-  categoryIcon: {
-    width: "100%",
-    borderRadius: 16,
-    backgroundColor: "#fff",
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    fontSize: 36,
-  },
-  categoryText: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: "#505050",
-    marginTop: 8,
-    textAlign: "center",
-  },
-  /** Content */
-  content: {
-    flex: 1,
-    backgroundColor: "#fff",
-    paddingHorizontal: 24,
-    paddingBottom: 24,
-    marginTop: 8,
-    height: 420,
-  },
-  contentHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingVertical: 12,
-  },
-  contentTitle: {
-    fontSize: 20,
-    fontWeight: "700",
-    color: "#505050",
-  },
-  contentLink: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#505050",
-  },
-  contentPlaceholder: {
-    borderStyle: "dashed",
-    borderWidth: 4,
-    borderColor: "#e5e7eb",
-    flex: 1,
-    borderRadius: 8,
-  },
-});
