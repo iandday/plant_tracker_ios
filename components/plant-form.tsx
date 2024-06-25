@@ -33,26 +33,41 @@ export type FormType = z.infer<typeof schema>;
 
 export type PlantFormProps = {
   onSubmit?: SubmitHandler<FormType>;
-  plantData: PlantOut;
+  plantData?: PlantOut;
   areaData: AreaOut[];
 };
 
+const blankPlantOut: PlantOut = {
+  name: "",
+  common_name: "",
+  scientific_name: "",
+  notes: "",
+  area: "",
+  purchase_date: "",
+  user: "",
+};
 /* eslint-disable max-lines-per-function */
-export const PlantEditForm = ({
+export const PlantForm = ({
   onSubmit = () => {},
-  plantData,
+  plantData = blankPlantOut,
   areaData,
 }: PlantFormProps) => {
+  const defaultValues = plantData.name
+    ? {
+        name: plantData.name,
+        common_name: plantData.common_name,
+        scientific_name: plantData.scientific_name,
+        notes: plantData.notes,
+        area: plantData.area,
+        p_date: dayjs(plantData?.purchase_date, "YYYY-MM-DD"),
+      }
+    : {
+        p_date: dayjs(),
+      };
+
   const { handleSubmit, control } = useForm<FormType>({
     resolver: zodResolver(schema),
-    defaultValues: {
-      name: plantData.name,
-      common_name: plantData.common_name,
-      scientific_name: plantData.scientific_name,
-      notes: plantData.notes,
-      area: plantData.area,
-      p_date: dayjs(plantData?.purchase_date, "YYYY-MM-DD"),
-    },
+    defaultValues: defaultValues,
   });
 
   // build list for area select
