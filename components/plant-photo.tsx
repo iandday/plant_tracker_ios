@@ -8,16 +8,16 @@ import { Pressable } from "react-native";
 
 type Props = {
   plant: PlantOut;
+  height: string;
+  width: string;
 };
 
-export const PlantPhoto = ({ plant }: Props) => {
-  const baseURL = storage.getString("base_url");
-
+export const PlantPhoto = ({ plant, height, width }: Props) => {
   if (plant.main_photo) {
+    const baseURL = storage.getString("base_url");
     return (
       <Image
-        className="w-full overflow-hidden rounded-t-xl"
-        contentFit="contain"
+        classNames={`object-cover h-${height} w-${width} flex-1`}
         source={{
           uri: baseURL + "/" + plant.main_photo,
         }}
@@ -25,13 +25,10 @@ export const PlantPhoto = ({ plant }: Props) => {
     );
   } else {
     return (
-      <View className="m-2  rounded-xl h-64 w-64 border border-border bg-background">
-        <Image
-          className="h-full w-full"
-          contentFit="cover"
-          source={require("../assets/images/alivePlant.png")}
-        />
-      </View>
+      <Image
+        classNames={`object-cover h-${height} w-${width} flex-1`}
+        source={require("../assets/images/alivePlant.png")}
+      />
     );
   }
 };

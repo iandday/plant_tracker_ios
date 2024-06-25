@@ -9,7 +9,10 @@ export * from "./input";
 export * from "./progress";
 export * from "./text";
 export * from "./tooltip";
-
+export * from "./custom-backdrop";
+export * from "./select";
+export * from "./datepicker";
+export * from "./modal";
 // export base components from react-native
 export {
   ActivityIndicator,

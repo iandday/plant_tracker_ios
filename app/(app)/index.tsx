@@ -39,13 +39,6 @@ export default function Index() {
   const [graveyardData, setGraveyardData] = useState<PlantOut[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  cssInterop(FontAwesome6, {
-    className: {
-      target: "style",
-      nativeStyleToProp: { height: true, width: true, size: true },
-    },
-  });
-
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
@@ -103,14 +96,13 @@ export default function Index() {
         <Text>Content Here</Text>
       </View>
       {/* Footer */}
-      <View className="grow-0">
+      <View className="grow-0 h-100">
         <View className="flex flex-row items-center justify-center">
           {categories.map((item, index) => {
             return (
-              <View className="bg-secondary rounded-full p-2 m-1">
+              <View className="bg-secondary rounded-full p-2 m-1" key={index}>
                 <TouchableOpacity
                   className="flex-1, items-center px-4"
-                  key={item.name}
                   onPress={item.action}
                 >
                   <FontAwesome6

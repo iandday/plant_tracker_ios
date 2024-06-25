@@ -74,7 +74,7 @@ export const Input = React.forwardRef<TextInput, NInputProps>((props, ref) => {
   const onBlur = React.useCallback(() => setIsFocussed(false), []);
   const onFocus = React.useCallback(() => setIsFocussed(true), []);
   const cName = twMerge(
-    "h-19 rounded-full border-[1px] border-border p-3  text-primary bg-input",
+    "h-19 rounded-full border-[1px] border-border p-3  text-foreground bg-input m-2",
     className
   );
 
@@ -98,6 +98,7 @@ export const Input = React.forwardRef<TextInput, NInputProps>((props, ref) => {
         onBlur={onBlur}
         onFocus={onFocus}
         {...inputProps}
+
         //style={StyleSheet.flatten([inputProps.style])}
       />
       {error && (

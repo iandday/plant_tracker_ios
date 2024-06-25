@@ -9,43 +9,9 @@ import {
   BottomSheetModal,
   BottomSheetView,
   BottomSheetModalProvider,
-  BottomSheetBackdropProps,
 } from "@gorhom/bottom-sheet";
 import { LoginForm, LoginFormProps } from "~/components/login-form";
-import { Button, Text } from "~/components/ui";
-
-import colors from "tailwindcss/colors";
-import Animated, {
-  Extrapolate,
-  interpolate,
-  useAnimatedStyle,
-} from "react-native-reanimated";
-
-const CustomBackdrop = ({ animatedIndex, style }: BottomSheetBackdropProps) => {
-  // animated variables
-  const containerAnimatedStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(
-      animatedIndex.value,
-      [0, 1],
-      [0, 1],
-      Extrapolate.CLAMP
-    ),
-  }));
-
-  // styles
-  const containerStyle = useMemo(
-    () => [
-      style,
-      {
-        backgroundColor: "000000",
-      },
-      containerAnimatedStyle,
-    ],
-    [style, containerAnimatedStyle]
-  );
-
-  return <Animated.View style={containerStyle} className="bg-background" />;
-};
+import { Button, CustomBackdrop, Text } from "~/components/ui";
 
 export default function login() {
   const signIn = useAuth.use.signIn();
@@ -94,69 +60,67 @@ export default function login() {
 
   return (
     <SafeAreaView className="bg-background, flex-1">
-      <BottomSheetModalProvider>
-        <BottomSheetModal
-          ref={bottomSheetModalRef}
-          index={1}
-          snapPoints={snapPoints}
-          onChange={handleSheetChanges}
-          backdropComponent={CustomBackdrop}
-        >
-          <BottomSheetView className="bg-background">
-            <Text className="my-6 text-center text-5xl font-bold">
-              Plant Tracker
-            </Text>
-            <Text className="mb-2 text-center text-xl">
-              Who can remember when you watered it last?
-            </Text>
-
-            <Text className="my-1 pt-6 text-center text-lg">
-              Set your server's base URL below
-            </Text>
-
-            <TextInput
-              autoCapitalize="none"
-              autoCorrect={false}
-              placeholder="https://plant.mydomain.com"
-              onChange={(value) => setBaseURL(value.nativeEvent.text)}
-              className={
-                "placeholder:text-primary mx-10 mt-0 rounded-xl border-[0.5px] px-4 py-3 text-foreground bg-input"
-              }
-            />
-
-            <Button
-              label="Let's Get Started "
-              onPress={() => {
-                router.replace("/login");
-              }}
-              variant="default"
-              fullWidth={false}
-              size="lg"
-              className="mx-20 my-10"
-            />
-          </BottomSheetView>
-        </BottomSheetModal>
-
-        <View className="flex flex-col">
-          <Text className="text-5xl font-bold mb-6 pt-48 text-center">
-            Welcome Back!
+      <BottomSheetModal
+        ref={bottomSheetModalRef}
+        index={1}
+        snapPoints={snapPoints}
+        onChange={handleSheetChanges}
+        backdropComponent={CustomBackdrop}
+      >
+        <BottomSheetView className="bg-background flex-1">
+          <Text className="my-6 text-center text-5xl font-bold">
+            Plant Tracker
           </Text>
-          <Text className="text-xl font-medium mb-6 text-center py-4">
-            Sign in to your account at {baseURL}
+          <Text className="mb-2 text-center text-xl">
+            Who can remember when you watered it last?
           </Text>
-          <LoginForm onSubmit={onSubmit} />
+
+          <Text className="my-1 pt-6 text-center text-lg">
+            Set your server's base URL below
+          </Text>
+
+          <TextInput
+            autoCapitalize="none"
+            autoCorrect={false}
+            placeholder="https://plant.mydomain.com"
+            onChange={(value) => setBaseURL(value.nativeEvent.text)}
+            className={
+              "placeholder:text-primary mx-10 mt-0 rounded-xl border-[0.5px] px-4 py-3 text-foreground bg-input"
+            }
+          />
 
           <Button
+            label="Let's Get Started "
+            onPress={() => {
+              router.replace("/login");
+            }}
             variant="default"
             fullWidth={false}
-            label="Change Server"
-            onPress={() => {
-              bottomSheetModalRef.current?.present();
-            }}
-            className="mx-7"
+            size="lg"
+            className="mx-20 my-10"
           />
-        </View>
-      </BottomSheetModalProvider>
+        </BottomSheetView>
+      </BottomSheetModal>
+
+      <View className="flex flex-col">
+        <Text className="text-5xl font-bold mb-6 pt-48 text-center">
+          Welcome Back!
+        </Text>
+        <Text className="text-xl font-medium mb-6 text-center py-4">
+          Sign in to your account at {baseURL}
+        </Text>
+        <LoginForm onSubmit={onSubmit} />
+
+        <Button
+          variant="default"
+          fullWidth={false}
+          label="Change Server"
+          onPress={() => {
+            bottomSheetModalRef.current?.present();
+          }}
+          className="mx-7"
+        />
+      </View>
     </SafeAreaView>
   );
 }

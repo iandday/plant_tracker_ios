@@ -1,6 +1,6 @@
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import * as React from "react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import type { ActivityOut, AreaOut, EntryOut, PlantOut } from "~/api";
 import { ActivityApi, AreaApi, EntryApi, PlantApi } from "~/api";
@@ -9,7 +9,19 @@ import ActivityList from "~/components/plant-detail/activity-list";
 import PlantInfo from "~/components/plant-detail/plantInfo";
 import { PlantPhoto } from "~/components/plant-photo";
 import axiosInstance from "~/provider/custom-axios";
-import { Button, Text, View } from "~/components/ui";
+import {
+  Button,
+  Text,
+  View,
+  TouchableOpacity,
+  CustomBackdrop,
+} from "~/components/ui";
+import * as ImagePicker from "expo-image-picker";
+import {
+  BottomSheetModal,
+  BottomSheetModalProvider,
+  BottomSheetView,
+} from "@gorhom/bottom-sheet";
 
 /* eslint-disable max-lines-per-function */
 export default function Plant() {
@@ -20,6 +32,75 @@ export default function Plant() {
   const [entryData, setEntryData] = useState<EntryOut[]>();
   const [activityData, setActivityData] = useState<ActivityOut[]>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const api = new PlantApi(undefined, undefined, axiosInstance);
+
+  const captureImage = async () => {
+    const cameraPermissions = await ImagePicker.getCameraPermissionsAsync();
+    if (!cameraPermissions.granted) {
+      const newCameraPermissions =
+        await ImagePicker.requestCameraPermissionsAsync();
+      if (!newCameraPermissions.granted) {
+        console.log("Failed to grant permissions");
+      }
+    }
+
+    let result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+  };
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      //aspect: [4, 3],
+      quality: 1,
+    });
+    if (!result.canceled) {
+      setShowModal(!showModal);
+      api.trackerApiViewPlantPostPlant(
+        local.id!,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        {
+          uri: result.assets[0].uri!,
+          name: result.assets[0].fileName!,
+          type: result.assets[0].mimeType!,
+        }
+      );
+    }
+  };
+
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const snapPoints = useMemo(() => ["25%", "25%"], []);
+  const handleSheetChanges = useCallback((index: number) => {
+    console.log("handleSheetChanges", index);
+  }, []);
+
+  useEffect(() => {
+    const setModal = async () => {
+      if (showModal) {
+        bottomSheetModalRef.current?.present();
+      } else {
+        bottomSheetModalRef.current?.dismiss();
+      }
+    };
+    setModal();
+  }, [showModal]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -70,6 +151,38 @@ export default function Plant() {
   if (plantData && areaData) {
     return (
       <Background>
+        <BottomSheetModal
+          ref={bottomSheetModalRef}
+          index={1}
+          snapPoints={snapPoints}
+          onChange={handleSheetChanges}
+          backdropComponent={CustomBackdrop}
+        >
+          <BottomSheetView className="bg-background flex-1 p-4">
+            <Button
+              label="Take New Picture"
+              onPress={() => {
+                captureImage;
+              }}
+              variant="default"
+              fullWidth={false}
+              size="lg"
+              className="mx-10"
+            />
+
+            <Button
+              label="Select Existing Picture"
+              onPress={() => {
+                pickImage();
+              }}
+              variant="default"
+              fullWidth={false}
+              size="lg"
+              className="mx-10"
+            />
+          </BottomSheetView>
+        </BottomSheetModal>
+
         <Stack.Screen
           options={{ title: plantData.name, headerBackTitle: "All Plants" }}
         />
@@ -79,7 +192,11 @@ export default function Plant() {
             <PlantInfo plantData={plantData} areaData={areaData} />
           </View>
           <View className="m-2">
-            <PlantPhoto plant={plantData} />
+            <TouchableOpacity onPress={() => setShowModal(!showModal)}>
+              <View className="h-64 w-64">
+                <PlantPhoto plant={plantData} height="64" width="full" />
+              </View>
+            </TouchableOpacity>
           </View>
         </View>
 
