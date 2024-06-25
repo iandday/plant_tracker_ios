@@ -7,6 +7,7 @@ import { Text, View, TouchableOpacity, SafeAreaView } from "~/components/ui";
 import Preferences from "~/components/settings/preferences";
 import Locations from "~/components/settings/locations";
 import Areas from "~/components/settings/areas";
+import { Background } from "~/components/background";
 const tabs = [
   { name: "Preferences", icon: "settings" },
   { name: "Locations", icon: "help-circle" },
@@ -17,13 +18,12 @@ export default function Settings() {
   const [value, setValue] = React.useState(0);
 
   return (
-    <SafeAreaView className="flex-1 bg-background">
+    <Background>
+      <Text className=" mb-6 text-xl font-semibold">
+        Customize Preferences, Areas, and Locations
+      </Text>
       <View className="py-4 ph-0 grow shrink basis-0">
-        <View className="pl-4 pr-4 mb-2">
-          <Text className="text-foreground mb-6 text-xl font-semibold">
-            Customize Preferences, Areas, and Locations
-          </Text>
-        </View>
+        <View className="pl-4 pr-4 mb-2"></View>
 
         <View className="flex-row pt-2 pb-2 bg-background">
           {tabs.map(({ name, icon }, index) => {
@@ -50,7 +50,8 @@ export default function Settings() {
                     />
 
                     <Text
-                      style={[styles.tabText, isActive && { color: "#6366f1" }]}
+                      className="text-foreground"
+                      //style={[styles.tabText, isActive && { color: "#6366f1" }]}
                     >
                       {name}
                     </Text>
@@ -65,7 +66,7 @@ export default function Settings() {
         {value === 1 && <Locations />}
         {value === 2 && <Areas />}
       </View>
-    </SafeAreaView>
+    </Background>
   );
 }
 
