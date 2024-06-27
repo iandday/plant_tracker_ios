@@ -18,10 +18,12 @@ import {
 } from "~/components/ui";
 import * as ImagePicker from "expo-image-picker";
 import {
+  BottomSheetBackgroundProps,
   BottomSheetModal,
   BottomSheetModalProvider,
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
+import Animated, { useAnimatedStyle } from "react-native-reanimated";
 
 /* eslint-disable max-lines-per-function */
 export default function Plant() {
@@ -144,6 +146,20 @@ export default function Plant() {
     fetchData();
   }, [local.id]);
 
+  const CustomBackground: React.FC<BottomSheetBackgroundProps> = ({
+    style,
+    animatedIndex,
+  }) => {
+    const containerAnimatedStyle = useAnimatedStyle(() => ({
+      backgroundColor: "#020303",
+    }));
+    const containerStyle = React.useMemo(
+      () => [style, containerAnimatedStyle],
+      [style, containerAnimatedStyle]
+    );
+    return <Animated.View pointerEvents="none" style={containerStyle} />;
+  };
+
   if (isLoading) {
     return <Text>Loading</Text>;
   }
@@ -157,6 +173,7 @@ export default function Plant() {
           snapPoints={snapPoints}
           onChange={handleSheetChanges}
           backdropComponent={CustomBackdrop}
+          backgroundComponent={CustomBackground}
         >
           <BottomSheetView className="bg-background flex-1 p-4">
             <Button
@@ -174,6 +191,16 @@ export default function Plant() {
               label="Select Existing Picture"
               onPress={() => {
                 pickImage();
+              }}
+              variant="default"
+              fullWidth={false}
+              size="lg"
+              className="mx-10"
+            />
+            <Button
+              label="Cancel"
+              onPress={() => {
+                setShowModal(false);
               }}
               variant="default"
               fullWidth={false}

@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "Starter Base",
-    "slug": "starter-base",
-    "version": "1.0.0",
+    "name": "Plant Tracker",
+    "slug": "plant-tracker",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
@@ -24,7 +24,10 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#2E3C4B"
       },
-      "package": "me.ianday.planttracker"
+      "package": "me.ianday.planttracker",
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -42,6 +45,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "5c698818-a498-4f76-b610-40813d1086d7"
+      }
     }
   }
 }

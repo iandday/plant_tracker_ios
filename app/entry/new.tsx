@@ -11,11 +11,25 @@ import axiosInstance from "~/provider/custom-axios";
 import { Text } from "~/components/ui";
 
 /* eslint-disable max-lines-per-function */
-export default function NewPlant() {
-  const [areaData, setAreaData] = useState<AreaOut[]>();
+
+type SearchParamType = {
+  plant_id: string;
+};
+
+export default function NewEntry() {
+  const { plant_id } = useLocalSearchParams<SearchParamType>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const api = new PlantApi(undefined, undefined, axiosInstance);
-  const router = useRouter();
+  const [activityData, setActivityData] = useState<ActivityOut[]>();
+  const [plantData, setPlantData] = useState<PlantOut>();
+  const [allPlantData, setAllPlantData] = useState<PlantOut[]>();
+  const entryAPI = new EntryApi(undefined, undefined, axiosInstance);
+  const activityAPI = new ActivityApi(undefined, undefined, axiosInstance);
+  const plantAPI = new PlantApi(undefined, undefined, axiosInstance);
+
+  // const [areaData, setAreaData] = useState<AreaOut[]>();
+
+  // const api = new PlantApi(undefined, undefined, axiosInstance);
+  // const router = useRouter();
 
   const handleSubmit: PlantFormProps["onSubmit"] = async (data) => {
     try {
@@ -41,16 +55,30 @@ export default function NewPlant() {
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
-      const areaApi = new AreaApi(undefined, undefined, axiosInstance);
-
       try {
-        const areaResponse = await areaApi.trackerApiViewAreaListAreas();
-        if (areaResponse.status === 200) {
-          setAreaData(areaResponse.data);
+        const response =
+          await activityAPI.trackerApiViewActivityListActivities();
+
+        if (response.status === 200) {
+          setActivityData(response.data);
         }
-      } catch (err) {
-        console.error(err);
-      }
+
+        // get specified plant
+        if (plant_id) {
+          const presponse = await plantAPI.trackerApiViewPlantGetPlant(
+            plant_id
+          );
+          if (presponse.status === 200) {
+            setPlantData(presponse.data);
+          }
+        }
+
+        // get all plants
+        const apresponse = await plantAPI.trackerApiViewPlantListPlants();
+        if (apresponse.status === 200) {
+          setAllPlantData(apresponse.data);
+        }
+      } catch (err) {}
       setIsLoading(false);
     };
     fetchData();
@@ -60,7 +88,7 @@ export default function NewPlant() {
     return <Text>Loading</Text>;
   }
 
-  if (areaData) {
+  if (activityData) {
     return (
       <Background>
         <Stack.Screen
@@ -69,8 +97,7 @@ export default function NewPlant() {
             headerBackTitle: "All Plants",
           }}
         />
-        <Text className=" text-center text-2xl mb-0">New Plant</Text>
-        <PlantForm areaData={areaData} onSubmit={handleSubmit} />
+        <Text className=" text-center text-2xl mb-0">New Activity Entry</Text>
       </Background>
     );
   } else {

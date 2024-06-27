@@ -9,6 +9,7 @@ import { Info } from "~/lib/icons/Info";
 import { Flower2 } from "~/lib/icons/Flower2";
 import { Pressable } from "react-native";
 import { Text } from "~/components/ui";
+import { New } from "~/lib/icons/New";
 
 export default function TabLayout() {
   const status = useAuth.use.status();
@@ -18,7 +19,7 @@ export default function TabLayout() {
     return (
       <Link href="/plant/new" asChild>
         <Pressable>
-          <Text className="px-3 text-foreground">Create</Text>
+          <New className="text-primary" />
         </Pressable>
       </Link>
     );
@@ -28,7 +29,11 @@ export default function TabLayout() {
     return <Redirect href="/login" />;
   }
   return (
-    <Drawer>
+    <Drawer
+      screenOptions={{
+        headerTintColor: "#59a188",
+      }}
+    >
       <Drawer.Screen
         name="index"
         options={{
@@ -37,20 +42,27 @@ export default function TabLayout() {
           // headerRight: () => <CreateNewPostLink />,
         }}
       />
-      <Drawer.Screen
-        name="settings"
-        options={{
-          title: "Settings",
-          drawerIcon: ({ color }) => <Info color={color} />,
-          // headerRight: () => <CreateNewPostLink />,
-        }}
-      />
+
       <Drawer.Screen
         name="my-plants"
         options={{
           title: "My Plants",
           drawerIcon: ({ color }) => <Flower2 color={color} />,
           headerRight: () => <CreateNewPlant />,
+          headerSearchBarOptions: {
+            placeholder: "Search",
+            onChangeText: (event) => {
+              console.log(event.nativeEvent.text);
+            },
+          },
+        }}
+      />
+      <Drawer.Screen
+        name="settings"
+        options={{
+          title: "Settings",
+          drawerIcon: ({ color }) => <Info color={color} />,
+          // headerRight: () => <CreateNewPostLink />,
         }}
       />
     </Drawer>
