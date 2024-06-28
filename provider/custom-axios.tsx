@@ -13,6 +13,7 @@ axiosInstance.interceptors.request.use(
     const baseURL = storage.getString("base_url");
     config.baseURL = baseURL;
     console.log(baseURL);
+    console.log(config)
     const token = getToken();
     if (token) {
       if (token?.access) {

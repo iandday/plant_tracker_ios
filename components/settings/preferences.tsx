@@ -26,7 +26,7 @@ export default function Preferences() {
   React.useEffect(() => {
     const getData = async () => {
       try {
-        const api = new UserApi(undefined, undefined, axiosInstance);
+        const api = new UserApi(undefined, '', axiosInstance);
         const response = await api.trackerApiViewUserMe();
         if (response.status === 200) {
           setUserData(response.data);

@@ -22,13 +22,13 @@ export default function NewEntry() {
   const [activityData, setActivityData] = useState<ActivityOut[]>();
   const [plantData, setPlantData] = useState<PlantOut>();
   const [allPlantData, setAllPlantData] = useState<PlantOut[]>();
-  const entryAPI = new EntryApi(undefined, undefined, axiosInstance);
-  const activityAPI = new ActivityApi(undefined, undefined, axiosInstance);
-  const plantAPI = new PlantApi(undefined, undefined, axiosInstance);
+  const entryAPI = new EntryApi(undefined, '', axiosInstance);
+  const activityAPI = new ActivityApi(undefined, '', axiosInstance);
+  const plantAPI = new PlantApi(undefined, '', axiosInstance);
 
   // const [areaData, setAreaData] = useState<AreaOut[]>();
 
-  // const api = new PlantApi(undefined, undefined, axiosInstance);
+  // const api = new PlantApi(undefined, '', axiosInstance);
   // const router = useRouter();
 
   const handleSubmit: PlantFormProps["onSubmit"] = async (data) => {

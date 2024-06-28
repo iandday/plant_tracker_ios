@@ -35,7 +35,7 @@ export default function Plant() {
   const [activityData, setActivityData] = useState<ActivityOut[]>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showModal, setShowModal] = useState<boolean>(false);
-  const api = new PlantApi(undefined, undefined, axiosInstance);
+  const api = new PlantApi(undefined, '', axiosInstance);
 
   const captureImage = async () => {
     const cameraPermissions = await ImagePicker.getCameraPermissionsAsync();
@@ -107,10 +107,10 @@ export default function Plant() {
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
-      const api = new PlantApi(undefined, undefined, axiosInstance);
-      const areaApi = new AreaApi(undefined, undefined, axiosInstance);
-      const activityApi = new ActivityApi(undefined, undefined, axiosInstance);
-      const entryApi = new EntryApi(undefined, undefined, axiosInstance);
+      const api = new PlantApi(undefined, '', axiosInstance);
+      const areaApi = new AreaApi(undefined, '', axiosInstance);
+      const activityApi = new ActivityApi(undefined, '', axiosInstance);
+      const entryApi = new EntryApi(undefined, '', axiosInstance);
 
       try {
         const response = await api.trackerApiViewPlantGetPlant(local.id!);

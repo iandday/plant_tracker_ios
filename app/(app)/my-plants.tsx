@@ -20,8 +20,8 @@ export default function MyPlants() {
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
-      const api = new PlantApi(undefined, undefined, axiosInstance);
-      const areaApi = new AreaApi(undefined, undefined, axiosInstance);
+      const api = new PlantApi(undefined, '', axiosInstance);
+      const areaApi = new AreaApi(undefined, '', axiosInstance);
       // get alive plants
       try {
         const response = await api.trackerApiViewPlantListPlants(true, false);

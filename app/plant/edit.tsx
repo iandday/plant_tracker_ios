@@ -19,7 +19,7 @@ export default function Edit() {
   const [entryData, setEntryData] = useState<EntryOut[]>();
   const [activityData, setActivityData] = useState<ActivityOut[]>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const api = new PlantApi(undefined, undefined, axiosInstance);
+  const api = new PlantApi(undefined, '', axiosInstance);
   const router = useRouter();
 
   const handleSubmit: PlantFormProps["onSubmit"] = async (data) => {
@@ -47,8 +47,8 @@ export default function Edit() {
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
-      const api = new PlantApi(undefined, undefined, axiosInstance);
-      const areaApi = new AreaApi(undefined, undefined, axiosInstance);
+      const api = new PlantApi(undefined, '', axiosInstance);
+      const areaApi = new AreaApi(undefined, '', axiosInstance);
 
       try {
         const response = await api.trackerApiViewPlantGetPlant(local.id);

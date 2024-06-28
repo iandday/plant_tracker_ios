@@ -14,7 +14,7 @@ import { Text } from "~/components/ui";
 export default function NewPlant() {
   const [areaData, setAreaData] = useState<AreaOut[]>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const api = new PlantApi(undefined, undefined, axiosInstance);
+  const api = new PlantApi(undefined, '', axiosInstance);
   const router = useRouter();
 
   const handleSubmit: PlantFormProps["onSubmit"] = async (data) => {
@@ -41,7 +41,7 @@ export default function NewPlant() {
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
-      const areaApi = new AreaApi(undefined, undefined, axiosInstance);
+      const areaApi = new AreaApi(undefined, '', axiosInstance);
 
       try {
         const areaResponse = await areaApi.trackerApiViewAreaListAreas();
