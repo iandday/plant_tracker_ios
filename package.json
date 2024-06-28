@@ -29,6 +29,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "expo": "^51.0.8",
+    "expo-dev-client": "~4.0.18",
     "expo-image": "~1.12.12",
     "expo-image-picker": "~15.0.5",
     "expo-linking": "~6.3.1",
@@ -47,6 +48,7 @@
     "react-native": "0.74.2",
     "react-native-elements": "^3.4.3",
     "react-native-gesture-handler": "~2.16.1",
+    "react-native-keyboard-aware-scrollview": "^2.1.0",
     "react-native-mmkv": "^2.12.2",
     "react-native-reanimated": "~3.10.1",
     "react-native-rename": "^3.2.14",
@@ -61,13 +63,13 @@
     "tailwindcss": "^3.4.4",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.23.8",
-    "zustand": "^4.4.7",
-    "expo-dev-client": "~4.0.18"
+    "zustand": "^4.4.7"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "@types/react": "~18.2.79",
     "@types/react-native-vector-icons": "^6.4.18",
+    "prettier": "^3.3.2",
     "typescript": "~5.3.3"
   },
   "private": true

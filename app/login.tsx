@@ -1,6 +1,13 @@
 import { useRouter } from "expo-router";
-import React, { useCallback, useMemo, useRef } from "react";
-import { SafeAreaView, TextInput, View } from "react-native";
+import React, { useCallback, useMemo, useRef, useState } from "react";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  ScrollView,
+  TextInput,
+  View,
+} from "react-native";
 import { UserApi } from "~/api";
 import { useAuth } from "~/core/auth";
 import { useIsBaseURLSet } from "~/core/use-is-base-url-set";
@@ -9,45 +16,52 @@ import {
   BottomSheetModal,
   BottomSheetView,
   BottomSheetModalProvider,
+  BottomSheetTextInput,
 } from "@gorhom/bottom-sheet";
 import { LoginForm, LoginFormProps } from "~/components/login-form";
 import { Button, CustomBackdrop, Text } from "~/components/ui";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scrollview";
 
 export default function login() {
   const signIn = useAuth.use.signIn();
   const [baseURL, setBaseURL] = useIsBaseURLSet();
   const router = useRouter();
+  const [loginError, setLoginError] = useState<String>();
 
   const onSubmit: LoginFormProps["onSubmit"] = async (data) => {
-    try {
-      const api = new UserApi(undefined, undefined, axiosInstance);
-      const response = await api.trackerApiViewUserNewToken({
+    setLoginError(``);
+    const api = new UserApi(undefined, "", axiosInstance);
+    const response = await api
+      .trackerApiViewUserNewToken({
         email: data.email,
         password: data.password,
+      })
+      .catch(function (error) {
+        if (error.response.status === 401) {
+          setLoginError("Incorrect credentials, try again");
+        } else {
+          setLoginError(`Failed to login: ${error}`);
+        }
+        console.log("start");
+        console.log(error);
+        console.log(error.response.status);
+        console.log("here");
       });
-      if (response.status === 200) {
-        const { access, refresh, user } = response.data;
-        signIn({
-          access: access,
-          refresh: refresh,
-          first_name: user.first_name,
-          last_name: user.last_name,
-          email: user.email,
-        });
-        router.push("/");
-      }
-    } catch (err: any) {
-      console.log(err);
+    if (response && response.status === 200) {
+      const { access, refresh, user } = response.data;
+      signIn({
+        access: access,
+        refresh: refresh,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        email: user.email,
+      });
+      router.push("/");
     }
   };
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-
-  // variables
   const snapPoints = useMemo(() => ["40%", "40%"], []);
-
-  // callbacks
-
   const handleSheetChanges = useCallback((index: number) => {
     console.log("handleSheetChanges", index);
   }, []);
@@ -59,7 +73,7 @@ export default function login() {
   }, []);
 
   return (
-    <SafeAreaView className="bg-background, flex-1">
+    <KeyboardAwareScrollView className="bg-background, flex-1 pb-10">
       <BottomSheetModal
         ref={bottomSheetModalRef}
         index={1}
@@ -67,7 +81,7 @@ export default function login() {
         onChange={handleSheetChanges}
         backdropComponent={CustomBackdrop}
       >
-        <BottomSheetView className="bg-background flex-1">
+        <BottomSheetView className="bg-background flex-1 mb-10 pb-10">
           <Text className="my-6 text-center text-5xl font-bold">
             Plant Tracker
           </Text>
@@ -79,7 +93,7 @@ export default function login() {
             Set your server's base URL below
           </Text>
 
-          <TextInput
+          <BottomSheetTextInput
             autoCapitalize="none"
             autoCorrect={false}
             placeholder="https://plant.mydomain.com"
@@ -97,18 +111,19 @@ export default function login() {
             variant="default"
             fullWidth={false}
             size="lg"
-            className="mx-20 my-10"
+            className="m-5 "
           />
         </BottomSheetView>
       </BottomSheetModal>
 
-      <View className="flex flex-col">
+      <KeyboardAwareScrollView className="flex flex-col">
         <Text className="text-5xl font-bold mb-6 pt-48 text-center">
           Welcome Back!
         </Text>
-        <Text className="text-xl font-medium mb-6 text-center py-4">
-          Sign in to your account at {baseURL}
+        <Text className="text-xl font-medium  text-center py-4">
+          Sign in to your account at
         </Text>
+        <Text className="text-l font-medium mb-6 text-center">{baseURL}</Text>
         <LoginForm onSubmit={onSubmit} />
 
         <Button
@@ -120,7 +135,12 @@ export default function login() {
           }}
           className="mx-7"
         />
-      </View>
-    </SafeAreaView>
+        {loginError && loginError.length > 0 && (
+          <Text className="my-1 pt-6 text-center text-2xl text-destructive">
+            {loginError}
+          </Text>
+        )}
+      </KeyboardAwareScrollView>
+    </KeyboardAwareScrollView>
   );
 }
