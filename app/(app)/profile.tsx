@@ -10,6 +10,8 @@ import {
   useTrackerApiViewUserMe,
   useTrackerApiViewUserUpdateMe,
 } from "~/lib/plant_tracker/endpoints/PlantTrackerFromFileSpecWithTransformer";
+import { getToken } from "~/core/auth/utils";
+import { signIn } from "~/core/auth";
 
 const schema = z.object({
   first_name: z.string({ required_error: "First name is required" }),
@@ -46,6 +48,14 @@ export default function Profile() {
   const onSubmit: SubmitHandler<FormType> = async (formData: FormType) => {
     mutate({ data: formData });
     if (isSuccess) {
+      const token = getToken();
+      signIn({
+        access: token.access,
+        refresh: token.refresh,
+        first_name: formData.first_name,
+        last_name: formData.last_name,
+        email: formData.email,
+      });
       router.push(`/settings`);
     }
   };

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import PlantCount from "~/components/index/plantCount";
 import { Text, View, SafeAreaView, TouchableOpacity } from "~/components/ui";
-import { getToken } from "~/core/auth/utils";
+import { TokenType, getToken } from "~/core/auth/utils";
 import { router } from "expo-router";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { cssInterop } from "nativewind";
@@ -10,6 +10,7 @@ import {
   useTrackerApiViewPlantListPlants,
   useTrackerApiViewUserMe,
 } from "~/lib/plant_tracker/endpoints/PlantTrackerFromFileSpecWithTransformer";
+import { useIsFocused } from "@react-navigation/native";
 
 const categories = [
   {
@@ -35,7 +36,13 @@ const categories = [
 ];
 
 export default function Index() {
-  const token = getToken();
+  const [token, setToken] = useState<TokenType>();
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    setToken(getToken());
+  }, [isFocused]);
+
   const {
     isLoading: plantIsLoading,
     isError: plantisError,
