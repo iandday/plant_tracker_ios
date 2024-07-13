@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
-  StyleSheet,
-  SafeAreaView,
   View,
   ScrollView,
   TouchableOpacity,
@@ -14,29 +12,20 @@ import { useColorScheme } from "~/lib/useColorScheme";
 import FeatherIcon from "react-native-vector-icons/Feather";
 import { Text } from "~/components/ui/text";
 import { Button } from "~/components/ui/button";
-import { UserApi, UserSchema } from "~/api";
-import axiosInstance from "~/provider/custom-axios";
 import { useAuth } from "~/core/auth";
+import { router } from "expo-router";
+import { useTrackerApiViewUserMe } from "~/lib/plant_tracker/endpoints/PlantTrackerFromFileSpecWithTransformer";
 
 export default function Preferences() {
   const { isDarkColorScheme, setColorScheme } = useColorScheme();
   const signOut = useAuth.use.signOut();
-  const [userData, setUserData] = React.useState<UserSchema>();
 
-  React.useEffect(() => {
-    const getData = async () => {
-      try {
-        const api = new UserApi(undefined, '', axiosInstance);
-        const response = await api.trackerApiViewUserMe();
-        if (response.status === 200) {
-          setUserData(response.data);
-        }
-      } catch (err: any) {
-        console.log(err);
-      }
-    };
-    getData();
-  }, []);
+  const {
+    isLoading: userIsLoading,
+    isError: userisError,
+    error: userError,
+    data: userData,
+  } = useTrackerApiViewUserMe();
 
   const [form, setForm] = useState({
     emailNotifications: true,
@@ -68,7 +57,7 @@ export default function Preferences() {
             variant="default"
             fullWidth={false}
             label="Edit Profile"
-            onPress={() => console.log("profile")}
+            onPress={() => router.navigate("/profile")}
             className="mt-3 px-2 grow "
           />
           <Button

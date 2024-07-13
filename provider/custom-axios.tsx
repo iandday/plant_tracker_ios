@@ -10,10 +10,7 @@ const axiosInstance: AxiosInstance = axios.create();
 
 axiosInstance.interceptors.request.use(
   async (config) => {
-    const baseURL = storage.getString("base_url");
-    config.baseURL = baseURL;
-    console.log(baseURL);
-    console.log(config)
+    config.baseURL = storage.getString("base_url");
     const token = getToken();
     if (token) {
       if (token?.access) {
@@ -29,8 +26,6 @@ axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    console.log(error);
-    console.log(error.response.status);
     // If the error status is 401 and there is no originalRequest._retry flag,
     // if (error.response.status === 401) {
     //   console.log('In');
@@ -41,31 +36,43 @@ axiosInstance.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        const token = useAuth.use.token();
+        const baseURL = storage.getString("base_url");
+        const tokenString = storage.getString("token");
 
-        const baseURL = getItem<string | undefined>("base_url");
-        const response = await axios.post(baseURL + "/user/renew", {
-          refresh_token: token?.refresh,
-        });
-        const { access_token, refresh_token, user } = response.data;
-        signIn({
-          access: access_token,
-          refresh: refresh_token,
-          first_name: user.first_name,
-          last_name: user.last_name,
-          email: user.email,
-        });
-
-        // Retry the original request with the new token
-        originalRequest.headers.Authorization = `Bearer ${access_token}`;
-        return axios(originalRequest);
+        if (tokenString !== undefined) {
+          const token = JSON.parse(tokenString);
+          if (token.refresh) {
+            try {
+              const response = await axios.post(`${baseURL}/api/user/refresh`, {
+                refresh: token?.refresh,
+              });
+              const { access, refresh } = response.data;
+              signIn({
+                access: access,
+                refresh: refresh,
+                first_name: token.first_name,
+                last_name: token.last_name,
+                email: token.email,
+              });
+              // Retry the original request with the new token
+              originalRequest.headers.Authorization = `Bearer ${access}`;
+              return axios(originalRequest);
+            } catch (error) {
+              console.log("failed to get new tokens");
+              console.log(error.response.status);
+            }
+          } else {
+            router.navigate("/login");
+          }
+        } else {
+          router.navigate("/login");
+        }
       } catch (error) {
         console.log("refresh failed");
         removeToken();
         router.navigate("/login");
       }
     }
-
     return Promise.reject(error);
   }
 );

@@ -1,0 +1,22 @@
+
+
+
+Run in simulator
+	npx expo run --device
+Run in expo
+	npx expo start --tunnel
+
+Build to test flight
+	Bump version in app.json
+	eas build --profile production --platform ios --local
+	Upload artifact via transport
+	
+
+Run on phone
+	use distro cert=
+	Launch in Xcode
+	uncheck let xcode manage
+	create new provisioning profile, import it
+	uncheck debugging in scheme
+	install app
+		npx expo start --tunnel

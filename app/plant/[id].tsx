@@ -1,14 +1,10 @@
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import * as React from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-
-import type { ActivityOut, AreaOut, EntryOut, PlantOut } from "~/api";
-import { ActivityApi, AreaApi, EntryApi, PlantApi } from "~/api";
 import { Background } from "~/components/background";
 import ActivityList from "~/components/plant-detail/activity-list";
 import PlantInfo from "~/components/plant-detail/plantInfo";
 import { PlantPhoto } from "~/components/plant-photo";
-import axiosInstance from "~/provider/custom-axios";
 import {
   Button,
   Text,
@@ -24,18 +20,48 @@ import {
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
 import Animated, { useAnimatedStyle } from "react-native-reanimated";
+import {
+  useTrackerApiViewActivityListActivities,
+  useTrackerApiViewAreaGetArea,
+  useTrackerApiViewEntryGetPlantEntries,
+  useTrackerApiViewPlantGetPlant,
+  useTrackerApiViewPlantPostPlant,
+} from "~/lib/plant_tracker/endpoints/PlantTrackerFromFileSpecWithTransformer";
 
 /* eslint-disable max-lines-per-function */
 export default function Plant() {
   const local = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
-  const [areaData, setAreaData] = useState<AreaOut>();
-  const [plantData, setPlantData] = useState<PlantOut>();
-  const [entryData, setEntryData] = useState<EntryOut[]>();
-  const [activityData, setActivityData] = useState<ActivityOut[]>();
+  const {
+    isLoading: plantIsLoading,
+    isError: plantisError,
+    error: plantError,
+    data: plantData,
+    refetch: plantRefetch,
+  } = useTrackerApiViewPlantGetPlant(local.id!);
+  const {
+    isLoading: entryIsLoading,
+    isError: entryisError,
+    error: antryError,
+    data: entryData,
+  } = useTrackerApiViewEntryGetPlantEntries(local.id!);
+  const {
+    isLoading: activityIsLoading,
+    isError: activityisError,
+    error: activityError,
+    data: activityData,
+  } = useTrackerApiViewActivityListActivities();
+  const {
+    isLoading: areaIsLoading,
+    isError: areaisError,
+    error: areaError,
+    data: areaData,
+  } = useTrackerApiViewAreaGetArea(plantData?.area);
+  const { mutate: plantMutate, isSuccess: plantIsSuccess } =
+    useTrackerApiViewPlantPostPlant();
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showModal, setShowModal] = useState<boolean>(false);
-  const api = new PlantApi(undefined, '', axiosInstance);
 
   const captureImage = async () => {
     const cameraPermissions = await ImagePicker.getCameraPermissionsAsync();
@@ -68,22 +94,16 @@ export default function Plant() {
     });
     if (!result.canceled) {
       setShowModal(!showModal);
-      api.trackerApiViewPlantPostPlant(
-        local.id!,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        {
-          uri: result.assets[0].uri!,
-          name: result.assets[0].fileName!,
-          type: result.assets[0].mimeType!,
-        }
-      );
+      plantMutate({
+        plantId: local.id!,
+        data: {
+          file: {
+            uri: result.assets[0].uri!,
+            name: result.assets[0].fileName || `${local.id}-main`,
+            type: result.assets[0].mimeType!,
+          },
+        },
+      });
     }
   };
 
@@ -105,46 +125,13 @@ export default function Plant() {
   }, [showModal]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      const api = new PlantApi(undefined, '', axiosInstance);
-      const areaApi = new AreaApi(undefined, '', axiosInstance);
-      const activityApi = new ActivityApi(undefined, '', axiosInstance);
-      const entryApi = new EntryApi(undefined, '', axiosInstance);
-
-      try {
-        const response = await api.trackerApiViewPlantGetPlant(local.id!);
-        if (response.status === 200) {
-          setPlantData(response.data);
-        }
-        const areaResponse = await areaApi.trackerApiViewAreaGetArea(
-          response.data.area
-        );
-        if (areaResponse.status === 200) {
-          setAreaData(areaResponse.data);
-        }
-        const entryResponse = await entryApi.trackerApiViewEntryGetPlantEntries(
-          response.data.id!
-        );
-        if (entryResponse.status === 200) {
-          setEntryData(entryResponse.data);
-        }
-        const activityResponse =
-          await activityApi.trackerApiViewActivityListActivities();
-        if (activityResponse.status === 200) {
-          setActivityData(activityResponse.data);
-        }
-        if (areaResponse.status === 200) {
-          setAreaData(areaResponse.data);
-        }
-      } catch (err) {
-        console.error(err);
+    const refreshData = async () => {
+      if (plantIsSuccess) {
+        plantRefetch();
       }
-
-      setIsLoading(false);
     };
-    fetchData();
-  }, [local.id]);
+    refreshData();
+  }, [plantIsSuccess]);
 
   const CustomBackground: React.FC<BottomSheetBackgroundProps> = ({
     style,
@@ -160,7 +147,7 @@ export default function Plant() {
     return <Animated.View pointerEvents="none" style={containerStyle} />;
   };
 
-  if (isLoading) {
+  if (plantIsLoading || areaIsLoading || activityIsLoading || entryIsLoading) {
     return <Text>Loading</Text>;
   }
 
@@ -238,6 +225,7 @@ export default function Plant() {
             }}
           />
         </View>
+
         {activityData && entryData && entryData.length > 0 ? (
           <View className="pt-2 text-primary  dark:text-primaryDark">
             <View className="items-center">

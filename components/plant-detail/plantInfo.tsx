@@ -1,7 +1,7 @@
 import React from "react";
 
-import type { AreaOut, PlantOut } from "~/api";
 import { Text, View } from "~/components/ui";
+import { AreaOut, PlantOut } from "~/lib/plant_tracker/model";
 
 interface plantCountProps {
   plantData: PlantOut;
@@ -16,13 +16,13 @@ interface plantInfo {
 export default function plantInfo({ plantData, areaData }: plantCountProps) {
   const items: plantInfo[] = [
     { label: "Common Name", value: plantData.common_name! },
-    { label: "Scientific Name", value: plantData.common_name! },
+    { label: "Scientific Name", value: plantData.scientific_name! },
     { label: "Area", value: areaData?.name },
     { label: "Purchase Date", value: plantData.purchase_date! },
     { label: "Death Date", value: plantData.death_date! },
     { label: "Notes", value: plantData.notes! },
   ];
-
+  console.log(plantData);
   return (
     <View className="px-3">
       {items.map((item: plantInfo, index) =>

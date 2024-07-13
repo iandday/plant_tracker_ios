@@ -4,50 +4,33 @@ import React from "react";
 import { PlantCard } from "~/components/plant-card";
 import { Text } from "~/components/ui/text";
 import { Background } from "~/components/background";
-import { AreaApi, AreaOut, PlantApi, PlantOut } from "~/api";
 import axiosInstance from "~/provider/custom-axios";
 import { FlatList, ScrollView } from "react-native-gesture-handler";
 import { ListItem, SearchBar } from "react-native-elements";
 import filter from "lodash.filter";
 import { useNavigation } from "expo-router";
+import {
+  useTrackerApiViewAreaListAreas,
+  useTrackerApiViewPlantListPlants,
+} from "~/lib/plant_tracker/endpoints/PlantTrackerFromFileSpecWithTransformer";
+import { PlantOut } from "~/lib/plant_tracker/model";
 
 export default function MyPlants() {
-  const [areaData, setAreaData] = useState<AreaOut[]>([]);
-  const [plantData, setPlantData] = useState<PlantOut[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigation = useNavigation();
+  const {
+    isLoading: plantIsLoading,
+    isError: plantisError,
+    error: plantError,
+    data: plantData,
+  } = useTrackerApiViewPlantListPlants({ exclude_graveyard: true });
 
   useEffect(() => {
     const fetchData = async () => {
-      setIsLoading(true);
-      const api = new PlantApi(undefined, '', axiosInstance);
-      const areaApi = new AreaApi(undefined, '', axiosInstance);
-      // get alive plants
-      try {
-        const response = await api.trackerApiViewPlantListPlants(true, false);
-        if (response.status === 200) {
-          setPlantData(response.data);
-        }
-      } catch (err) {
-        console.error(err);
-      }
-      // get area data
-      try {
-        const areaResponse = await areaApi.trackerApiViewAreaListAreas();
-        if (areaResponse.status === 200) {
-          setAreaData(areaResponse.data);
-        }
-      } catch (err) {
-        console.error(err);
-      }
-
       navigation.setOptions({
         headerSearchBarOptions: {
           onChangeText: (text: string) => console.log(text),
         },
       });
-
-      setIsLoading(false);
     };
     fetchData();
   }, [navigation]);
@@ -60,20 +43,19 @@ export default function MyPlants() {
     <PlantCard plant={item} key={item.id} />
   );
 
-  //plantData.sort((a: PlantOut, b: PlantOut) => a.area.localeCompare(b.area)
-
-  if (isLoading) {
+  if (plantIsLoading) {
     return <Text>Loading</Text>;
   }
-  return (
-    <Background>
-      <FlatList
-        data={plantData.sort((a: PlantOut, b: PlantOut) =>
-          a.area.localeCompare(b.area)
-        )}
-        renderItem={renderItem}
-        //keyExtractor={(item) => item.id}
-      />
-    </Background>
-  );
+  if (plantData) {
+    return (
+      <Background>
+        <FlatList
+          data={plantData.sort((a: PlantOut, b: PlantOut) =>
+            a.area.localeCompare(b.area)
+          )}
+          renderItem={renderItem}
+        />
+      </Background>
+    );
+  }
 }

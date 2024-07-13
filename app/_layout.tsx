@@ -13,6 +13,7 @@ import { ThemeToggle } from "~/components/ThemeToggle";
 import { hydrateAuth } from "../core/auth";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const LIGHT_THEME: Theme = {
   dark: false,
@@ -22,6 +23,8 @@ const DARK_THEME: Theme = {
   dark: true,
   colors: NAV_THEME.dark,
 };
+
+const queryClient = new QueryClient();
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -71,16 +74,18 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
-      <GestureHandlerRootView>
-        <BottomSheetModalProvider>
-          <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
-          <Stack>
-            <Stack.Screen name="(app)" options={{ headerShown: false }} />
-            <Stack.Screen name="login" options={{ headerShown: false }} />
-          </Stack>
-        </BottomSheetModalProvider>
-      </GestureHandlerRootView>
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
+        <GestureHandlerRootView>
+          <BottomSheetModalProvider>
+            <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
+            <Stack>
+              <Stack.Screen name="(app)" options={{ headerShown: false }} />
+              <Stack.Screen name="login" options={{ headerShown: false }} />
+            </Stack>
+          </BottomSheetModalProvider>
+        </GestureHandlerRootView>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }

@@ -1,10 +1,10 @@
 import React from "react";
 
-import type { PlantOut } from "~/api";
 import { storage } from "~/core/storage";
 import { Image } from "./ui/image";
 import { View } from "react-native";
 import { Pressable } from "react-native";
+import { PlantOut } from "~/lib/plant_tracker/model";
 
 type Props = {
   plant: PlantOut;

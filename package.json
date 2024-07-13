@@ -8,7 +8,9 @@
     "dev:android": "expo start -c --android",
     "android": "expo run:android",
     "ios": "expo run:ios  --device --port=9988",
-    "web": "expo start -c --web"
+    "web": "expo start -c --web",
+    "api:update": "npx openapi-generator-cli generate",
+    "codegen": "openapi-rq -i http://localhost/api/openapi.json -c axios -o lib/api"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.5.2",
@@ -25,9 +27,11 @@
     "@react-navigation/drawer": "^6.6.15",
     "@react-navigation/native": "^6.0.2",
     "@shopify/flash-list": "^1.6.4",
+    "@tanstack/react-query": "^5.49.2",
     "axios": "^1.7.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
+    "eas-cli": "^10.1.1",
     "expo": "^51.0.8",
     "expo-dev-client": "~4.0.18",
     "expo-image": "~1.12.12",
@@ -66,9 +70,12 @@
     "zustand": "^4.4.7"
   },
   "devDependencies": {
+    "@7nohe/openapi-react-query-codegen": "^1.4.1",
     "@babel/core": "^7.20.0",
+    "@openapitools/openapi-generator-cli": "^2.13.4",
     "@types/react": "~18.2.79",
     "@types/react-native-vector-icons": "^6.4.18",
+    "orval": "^6.31.0",
     "prettier": "^3.3.2",
     "typescript": "~5.3.3"
   },

@@ -6,7 +6,6 @@ import type { SubmitHandler } from "react-hook-form";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
-import type { AreaOut, PlantOut } from "~/api";
 import type { Option } from "~/components/ui";
 import {
   Button,
@@ -16,6 +15,7 @@ import {
   Text,
   View,
 } from "~/components/ui";
+import { AreaOut, PlantOut } from "~/lib/plant_tracker/model";
 
 const schema = z.object({
   name: z.string({
@@ -26,7 +26,7 @@ const schema = z.object({
   scientific_name: z.string({}).nullable(),
   notes: z.string({}).nullable(),
   area: z.string({}).nullable(),
-  p_date: z.instanceof(dayjs as unknown as typeof Dayjs),
+  p_date: z.instanceof(dayjs as unknown as typeof Dayjs).nullable(),
 });
 
 export type FormType = z.infer<typeof schema>;
@@ -62,6 +62,9 @@ export const PlantForm = ({
         p_date: dayjs(plantData?.purchase_date, "YYYY-MM-DD"),
       }
     : {
+        common_name: "",
+        scientific_name: "",
+        notes: "",
         p_date: dayjs(),
       };
 

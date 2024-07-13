@@ -1,6 +1,6 @@
 import React from "react";
 import { Text, View, Image } from "../ui";
-import { PlantOut } from "~/api";
+import { PlantOut } from "~/lib/plant_tracker/model";
 
 interface plantCountProps {
   plantData: PlantOut[];

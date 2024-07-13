@@ -5,8 +5,8 @@ import React, { useEffect, useState } from "react";
 import { FlatList, StyleSheet } from "react-native";
 import StarRating from "react-native-star-rating-widget";
 
-import type { ActivityOut, EntryOut } from "~/api";
 import { Text, View, TouchableOpacity } from "~/components/ui";
+import { ActivityOut, EntryOut } from "~/lib/plant_tracker/model";
 
 interface listProps {
   entryData: EntryOut[];

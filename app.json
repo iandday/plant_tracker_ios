@@ -51,8 +51,9 @@
         "origin": false
       },
       "eas": {
-        "projectId": "5c698818-a498-4f76-b610-40813d1086d7"
+        "projectId": "2903ddef-1890-4cb3-bda0-8ee08d0ba8e1"
       }
-    }
+    },
+    "owner": "ian_ianday.me"
   }
 }

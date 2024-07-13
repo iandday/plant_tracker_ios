@@ -19,9 +19,6 @@ export default function Settings() {
 
   return (
     <Background>
-      <Text className=" mb-6 text-xl font-semibold">
-        Customize Preferences, Areas, and Locations
-      </Text>
       <View className="py-4 ph-0 grow shrink basis-0">
         <View className="pl-4 pr-4 mb-2"></View>
 

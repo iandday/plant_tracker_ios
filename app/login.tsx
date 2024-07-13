@@ -1,17 +1,7 @@
 import { useRouter } from "expo-router";
 import React, { useCallback, useMemo, useRef, useState } from "react";
-import {
-  KeyboardAvoidingView,
-  Platform,
-  SafeAreaView,
-  ScrollView,
-  TextInput,
-  View,
-} from "react-native";
-import { UserApi } from "~/api";
 import { useAuth } from "~/core/auth";
 import { useIsBaseURLSet } from "~/core/use-is-base-url-set";
-import axiosInstance from "~/provider/custom-axios";
 import {
   BottomSheetModal,
   BottomSheetView,
@@ -21,6 +11,7 @@ import {
 import { LoginForm, LoginFormProps } from "~/components/login-form";
 import { Button, CustomBackdrop, Text } from "~/components/ui";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scrollview";
+import { useTrackerApiViewUserNewToken } from "~/lib/plant_tracker/endpoints/PlantTrackerFromFileSpecWithTransformer";
 
 export default function login() {
   const signIn = useAuth.use.signIn();
@@ -28,36 +19,44 @@ export default function login() {
   const router = useRouter();
   const [loginError, setLoginError] = useState<String>();
 
+  const {
+    mutate: loginMutate,
+    isSuccess: loginMutateIsSuccess,
+    error: loginMutateError,
+    reset: loginMutateReset,
+    data: loginData,
+  } = useTrackerApiViewUserNewToken();
+
   const onSubmit: LoginFormProps["onSubmit"] = async (data) => {
     setLoginError(``);
-    const api = new UserApi(undefined, "", axiosInstance);
-    const response = await api
-      .trackerApiViewUserNewToken({
-        email: data.email,
-        password: data.password,
-      })
-      .catch(function (error) {
-        if (error.response.status === 401) {
-          setLoginError("Incorrect credentials, try again");
-        } else {
-          setLoginError(`Failed to login: ${error}`);
-        }
-        console.log("start");
-        console.log(error);
-        console.log(error.response.status);
-        console.log("here");
-      });
-    if (response && response.status === 200) {
-      const { access, refresh, user } = response.data;
-      signIn({
-        access: access,
-        refresh: refresh,
-        first_name: user.first_name,
-        last_name: user.last_name,
-        email: user.email,
-      });
-      router.push("/");
-    }
+    loginMutate(
+      {
+        data: {
+          email: data.email,
+          password: data.password,
+        },
+      },
+      {
+        onSuccess(data) {
+          const { access, refresh, user } = data;
+          signIn({
+            access: access,
+            refresh: refresh,
+            first_name: user.first_name,
+            last_name: user.last_name,
+            email: user.email,
+          });
+          router.push("/");
+        },
+        onError: (err) => {
+          if (err.code === "401") {
+            setLoginError("Incorrect credentials, try again");
+          } else {
+            setLoginError(`Failed to login: ${err}`);
+          }
+        },
+      }
+    );
   };
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
@@ -99,7 +98,7 @@ export default function login() {
             placeholder="https://plant.mydomain.com"
             onChange={(value) => setBaseURL(value.nativeEvent.text)}
             className={
-              "placeholder:text-primary mx-10 mt-0 rounded-xl border-[0.5px] px-4 py-3 text-foreground bg-input"
+              "placeholder:text-primary mx-10 mt-0 rounded-xl border-[0.5px] px-4 py-3   bg-input text:primary"
             }
           />
 
@@ -123,7 +122,7 @@ export default function login() {
         <Text className="text-xl font-medium  text-center py-4">
           Sign in to your account at
         </Text>
-        <Text className="text-l font-medium mb-6 text-center">{baseURL}</Text>
+        <Text className="text-xl font-medium mb-6 text-center">{baseURL}</Text>
         <LoginForm onSubmit={onSubmit} />
 
         <Button

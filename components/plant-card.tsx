@@ -1,13 +1,12 @@
 import { Link } from "expo-router";
 import React from "react";
 
-import type { PlantOut } from "~/api";
-
 import { Text, Image } from "./ui";
 import { TouchableOpacity, View } from "react-native";
 
 import { PlantPhoto } from "./plant-photo";
 import { storage } from "~/core/storage";
+import { PlantOut } from "~/lib/plant_tracker/model";
 type Props = {
   plant: PlantOut;
 };
