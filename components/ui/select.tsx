@@ -65,6 +65,7 @@ type OptionsProps = {
   onSelect: (option: Option) => void;
   value?: string | number;
   testID?: string;
+  title: string;
 };
 
 function keyExtractor(item: Option) {
@@ -72,7 +73,7 @@ function keyExtractor(item: Option) {
 }
 
 export const Options = React.forwardRef<BottomSheetModal, OptionsProps>(
-  ({ options, onSelect, value, testID }, ref) => {
+  ({ options, onSelect, value, testID, title }, ref) => {
     const height = options.length * 40 + 100;
     const snapPoints = React.useMemo(() => [height], [height]);
 
@@ -90,7 +91,7 @@ export const Options = React.forwardRef<BottomSheetModal, OptionsProps>(
     );
 
     return (
-      <Modal ref={ref} index={0} snapPoints={snapPoints} title="Select Area">
+      <Modal ref={ref} index={0} snapPoints={snapPoints} title={title}>
         <List
           data={options}
           keyExtractor={keyExtractor}
@@ -212,6 +213,7 @@ export const Select = (props: SelectProps) => {
         ref={modal.ref}
         options={options}
         onSelect={onSelectOption}
+        title={label!}
       />
     </>
   );

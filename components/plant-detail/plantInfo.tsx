@@ -22,18 +22,16 @@ export default function plantInfo({ plantData, areaData }: plantCountProps) {
     { label: "Death Date", value: plantData.death_date! },
     { label: "Notes", value: plantData.notes! },
   ];
-  console.log(plantData);
+
   return (
-    <View className="px-3">
+    <View className='px-3'>
       {items.map((item: plantInfo, index) =>
         item.value ? (
           <View key={index}>
-            <Text className="text-left text-primary">{item.label} </Text>
+            <Text className='text-left text-primary'>{item.label} </Text>
 
-            <View className="align-center self-center    rounded-lg border-2 border-primaryDark bg-secondaryDark px-4 ">
-              <Text className="align-center items-baseline py-1 text-center">
-                {item.value}
-              </Text>
+            <View className='align-center self-center    rounded-lg border-2 border-primaryDark bg-secondaryDark px-4 '>
+              <Text className='align-center items-baseline py-1 text-center'>{item.value}</Text>
             </View>
           </View>
         ) : null

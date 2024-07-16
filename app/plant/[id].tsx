@@ -5,13 +5,7 @@ import { Background } from "~/components/background";
 import ActivityList from "~/components/plant-detail/activity-list";
 import PlantInfo from "~/components/plant-detail/plantInfo";
 import { PlantPhoto } from "~/components/plant-photo";
-import {
-  Button,
-  Text,
-  View,
-  TouchableOpacity,
-  CustomBackdrop,
-} from "~/components/ui";
+import { Button, Text, View, TouchableOpacity, CustomBackdrop } from "~/components/ui";
 import * as ImagePicker from "expo-image-picker";
 import {
   BottomSheetBackgroundProps,
@@ -57,8 +51,7 @@ export default function Plant() {
     error: areaError,
     data: areaData,
   } = useTrackerApiViewAreaGetArea(plantData?.area);
-  const { mutate: plantMutate, isSuccess: plantIsSuccess } =
-    useTrackerApiViewPlantPostPlant();
+  const { mutate: plantMutate, isSuccess: plantIsSuccess } = useTrackerApiViewPlantPostPlant();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -66,8 +59,7 @@ export default function Plant() {
   const captureImage = async () => {
     const cameraPermissions = await ImagePicker.getCameraPermissionsAsync();
     if (!cameraPermissions.granted) {
-      const newCameraPermissions =
-        await ImagePicker.requestCameraPermissionsAsync();
+      const newCameraPermissions = await ImagePicker.requestCameraPermissionsAsync();
       if (!newCameraPermissions.granted) {
         console.log("Failed to grant permissions");
       }
@@ -133,10 +125,7 @@ export default function Plant() {
     refreshData();
   }, [plantIsSuccess]);
 
-  const CustomBackground: React.FC<BottomSheetBackgroundProps> = ({
-    style,
-    animatedIndex,
-  }) => {
+  const CustomBackground: React.FC<BottomSheetBackgroundProps> = ({ style, animatedIndex }) => {
     const containerAnimatedStyle = useAnimatedStyle(() => ({
       backgroundColor: "#020303",
     }));
@@ -144,7 +133,12 @@ export default function Plant() {
       () => [style, containerAnimatedStyle],
       [style, containerAnimatedStyle]
     );
-    return <Animated.View pointerEvents="none" style={containerStyle} />;
+    return (
+      <Animated.View
+        pointerEvents='none'
+        style={containerStyle}
+      />
+    );
   };
 
   if (plantIsLoading || areaIsLoading || activityIsLoading || entryIsLoading) {
@@ -162,82 +156,98 @@ export default function Plant() {
           backdropComponent={CustomBackdrop}
           backgroundComponent={CustomBackground}
         >
-          <BottomSheetView className="bg-background flex-1 p-4">
+          <BottomSheetView className='bg-background flex-1 p-4'>
             <Button
-              label="Take New Picture"
+              label='Take New Picture'
               onPress={() => {
                 captureImage;
               }}
-              variant="default"
+              variant='default'
               fullWidth={false}
-              size="lg"
-              className="mx-10"
+              size='lg'
+              className='mx-10'
             />
 
             <Button
-              label="Select Existing Picture"
+              label='Select Existing Picture'
               onPress={() => {
                 pickImage();
               }}
-              variant="default"
+              variant='default'
               fullWidth={false}
-              size="lg"
-              className="mx-10"
+              size='lg'
+              className='mx-10'
             />
             <Button
-              label="Cancel"
+              label='Cancel'
               onPress={() => {
                 setShowModal(false);
               }}
-              variant="default"
+              variant='default'
               fullWidth={false}
-              size="lg"
-              className="mx-10"
+              size='lg'
+              className='mx-10'
             />
           </BottomSheetView>
         </BottomSheetModal>
 
-        <Stack.Screen
-          options={{ title: plantData.name, headerBackTitle: "All Plants" }}
-        />
-
-        <View className="height-200 flex w-full flex-row justify-around pt-2">
-          <View className="m-2">
-            <PlantInfo plantData={plantData} areaData={areaData} />
+        <Stack.Screen options={{ title: plantData.name, headerBackTitle: "All Plants" }} />
+        <View className='flex'>
+          <View className='height-200 flex w-full flex-row justify-around pt-2'>
+            <View className='m-2'>
+              <PlantInfo
+                plantData={plantData}
+                areaData={areaData}
+              />
+            </View>
+            <View className='m-2'>
+              <TouchableOpacity onPress={() => setShowModal(!showModal)}>
+                <View className='h-64 w-64'>
+                  <PlantPhoto
+                    plant={plantData}
+                    height='64'
+                    width='full'
+                  />
+                </View>
+              </TouchableOpacity>
+            </View>
           </View>
-          <View className="m-2">
-            <TouchableOpacity onPress={() => setShowModal(!showModal)}>
-              <View className="h-64 w-64">
-                <PlantPhoto plant={plantData} height="64" width="full" />
+
+          <View className='pt-2'>
+            <Button
+              label='Edit Plant'
+              onPress={() => {
+                router.navigate({
+                  pathname: `/plant/edit`,
+                  params: { id: plantData.id },
+                });
+              }}
+            />
+            <Button
+              label='New Activity Entry'
+              onPress={() => {
+                router.navigate({
+                  pathname: `/entry/new`,
+                  params: { id: plantData.id },
+                });
+              }}
+            />
+          </View>
+
+          {activityData && entryData && entryData.length > 0 ? (
+            <View className='pt-2 text-primary  dark:text-primaryDark flex pb-500'>
+              <View className='items-center'>
+                <Text className='pt-2 text-lg text-primary  dark:text-primaryDark'>Activity Entries</Text>
               </View>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        <View className="pt-2">
-          <Button
-            label="Edit Plant"
-            onPress={() => {
-              router.navigate({
-                pathname: `/plant/edit`,
-                params: { id: plantData.id },
-              });
-            }}
-          />
-        </View>
-
-        {activityData && entryData && entryData.length > 0 ? (
-          <View className="pt-2 text-primary  dark:text-primaryDark">
-            <View className="items-center">
-              <Text className="pt-2 text-lg text-primary  dark:text-primaryDark">
-                Activity Entries
-              </Text>
+              <View className=' w-full  pt-2'>
+                <ActivityList
+                  entryData={entryData}
+                  activityData={activityData}
+                />
+              </View>
             </View>
-            <View className="flex w-full  pt-2">
-              <ActivityList entryData={entryData} activityData={activityData} />
-            </View>
-          </View>
-        ) : null}
+          ) : null}
+        </View>
       </Background>
     );
   } else {

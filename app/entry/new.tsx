@@ -1,23 +1,25 @@
-import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import { Stack, router, useLocalSearchParams, useRouter } from "expo-router";
 import * as React from "react";
 
 import { Background } from "~/components/background";
+import { ActivityEntryForm, ActivityEntryFormProps, ActivityForm } from "~/components/entry-form";
 import type { PlantFormProps } from "~/components/plant-form";
 
 import { Text } from "~/components/ui";
 import {
   useTrackerApiViewActivityListActivities,
+  useTrackerApiViewEntryCreateEntry,
   useTrackerApiViewPlantListPlants,
 } from "~/lib/plant_tracker/endpoints/PlantTrackerFromFileSpecWithTransformer";
 
 /* eslint-disable max-lines-per-function */
 
 type SearchParamType = {
-  plant_id: string;
+  id: string;
 };
 
 export default function NewEntry() {
-  const { plant_id } = useLocalSearchParams<SearchParamType>();
+  const { id: plant_id } = useLocalSearchParams<SearchParamType>();
 
   const {
     isLoading: allPlantsIsLoading,
@@ -33,11 +35,35 @@ export default function NewEntry() {
     data: activityData,
   } = useTrackerApiViewActivityListActivities();
 
-  const handleSubmit: PlantFormProps["onSubmit"] = async (data) => {
-    try {
-    } catch (err: unknown) {
-      console.log(err);
-    }
+  const {
+    mutate: activityEntryMutate,
+    isSuccess: activityEntryMutateIsSuccess,
+    error: activityEntryMutateError,
+    reset: activityEntryMutateReset,
+    data: activityEntryData,
+  } = useTrackerApiViewEntryCreateEntry();
+
+  const handleSubmit: ActivityEntryFormProps["onSubmit"] = async (data) => {
+    activityEntryMutate(
+      {
+        data: {
+          plant_id: data.plant_id,
+          activities: data.activities,
+          plant_health: data.plant_health,
+          Timestamp: data.timestamp.toISOString(),
+          notes: data.notes,
+          file: data.photo,
+        },
+      },
+      {
+        onSuccess(data) {
+          router.replace(`/plant/${data!.plant}`);
+        },
+        onError: (err) => {
+          console.log(err);
+        },
+      }
+    );
   };
 
   if (activityIsLoading || allPlantsIsLoading) {
@@ -53,7 +79,12 @@ export default function NewEntry() {
             headerBackTitle: undefined,
           }}
         />
-        <Text className=" text-center text-2xl mb-0">New Activity Entry</Text>
+        <ActivityEntryForm
+          onSubmit={handleSubmit}
+          allPlantData={allPlantsData}
+          activityData={activityData}
+          plantID={plant_id}
+        />
       </Background>
     );
   } else {

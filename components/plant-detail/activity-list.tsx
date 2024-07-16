@@ -2,7 +2,7 @@
 import { useRouter } from "expo-router";
 
 import React, { useEffect, useState } from "react";
-import { FlatList, StyleSheet } from "react-native";
+import { FlatList, ScrollView, StyleSheet } from "react-native";
 import StarRating from "react-native-star-rating-widget";
 
 import { Text, View, TouchableOpacity } from "~/components/ui";
@@ -18,6 +18,7 @@ export default function ActivityList({ entryData, activityData }: listProps) {
 
   return (
     <FlatList
+      contentContainerStyle={{ flexGrow: 1, paddingBottom: 5 }}
       data={entryData}
       renderItem={({ item, index }: { item: EntryOut; index: number }) => (
         <TouchableOpacity
@@ -26,9 +27,9 @@ export default function ActivityList({ entryData, activityData }: listProps) {
             router.navigate(`/entry/${item.id}`);
           }}
         >
-          <View className=" m-2 rounded-xl bg-background  p-2">
-            <View className="flex flex-row justify-between">
-              <View className="basis-5/8">
+          <View className=' flex-1 m-2 rounded-xl bg-background  p-2'>
+            <View className='flex-1 flex flex-row justify-between'>
+              <View className='basis-5/8 flex-1'>
                 <FlatList
                   data={item.activities}
                   renderItem={({ item: a }) => {
@@ -41,8 +42,8 @@ export default function ActivityList({ entryData, activityData }: listProps) {
                   }}
                 />
               </View>
-              <View className="basis-3/8  items-center justify-center justify-items-center justify-self-center">
-                <Text className="pb-2">{item.Timestamp.split("T")[0]}</Text>
+              <View className='basis-3/8  items-center justify-center justify-items-center justify-self-center'>
+                <Text className='pb-2'>{item.Timestamp.split("T")[0]}</Text>
                 <StarRating
                   rating={item.plant_health}
                   starSize={15}
@@ -67,9 +68,9 @@ export default function ActivityList({ entryData, activityData }: listProps) {
 const styles = StyleSheet.create({
   container: {
     padding: 0,
-    flexGrow: 1,
-    flexShrink: 1,
-    flexBasis: 0,
+    //flexGrow: 1,
+    //flexShrink: 1,
+    //flexBasis: 0,
   },
   content: {
     paddingTop: 8,

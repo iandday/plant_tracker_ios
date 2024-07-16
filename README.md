@@ -1,16 +1,14 @@
-# Starter base
-
-A starting point to help you set up your project quickly and use the common components provided by `react-native-reusables`. The idea is to make it easier for you to get started.
+# Plant Tracker
 
 ## Features
 
-- NativeWind v4
-- Dark and light mode
-    - Android Navigation Bar matches mode
-    - Persistant mode
-- Common components
-    - ThemeToggle, Avatar, Button, Card, Progress, Text, Tooltip
+Plants
+Create Plant Entries
+List Plant Entries
+Edit Plant Entries
+Edit Plant Entry Photographs
 
-<img src="https://github.com/mrzachnugent/react-native-reusables/assets/63797719/42c94108-38a7-498b-9c70-18640420f1bc"
-     alt="starter-base-template"
-     style="width:270px;" />
+Activity Entries
+Create activity entry
+Settings
+Edit Profile

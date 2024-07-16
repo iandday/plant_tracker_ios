@@ -13,6 +13,7 @@
     "codegen": "openapi-rq -i http://localhost/api/openapi.json -c axios -o lib/api"
   },
   "dependencies": {
+    "@expo/vector-icons": "^14.0.2",
     "@fortawesome/fontawesome-svg-core": "^6.5.2",
     "@fortawesome/free-brands-svg-icons": "^6.5.2",
     "@fortawesome/free-regular-svg-icons": "^6.5.2",
@@ -50,6 +51,7 @@
     "react-hook-form": "^7.52.0",
     "react-icons": "^5.2.1",
     "react-native": "0.74.2",
+    "react-native-dropdown-picker": "^5.4.6",
     "react-native-elements": "^3.4.3",
     "react-native-gesture-handler": "~2.16.1",
     "react-native-keyboard-aware-scrollview": "^2.1.0",
@@ -58,10 +60,12 @@
     "react-native-rename": "^3.2.14",
     "react-native-safe-area-context": "4.10.1",
     "react-native-screens": "~3.31.1",
+    "react-native-sectioned-multi-select": "^0.10.0",
     "react-native-star-rating-widget": "^1.8.0",
     "react-native-svg": "15.2.0",
     "react-native-vector-icons": "^10.1.0",
     "react-native-web": "~0.19.6",
+    "react-query-swagger": "^15.12.3",
     "tailwind-merge": "^2.2.1",
     "tailwind-variants": "^0.2.1",
     "tailwindcss": "^3.4.4",
@@ -72,6 +76,8 @@
   "devDependencies": {
     "@7nohe/openapi-react-query-codegen": "^1.4.1",
     "@babel/core": "^7.20.0",
+    "@openapi-codegen/cli": "^2.0.2",
+    "@openapi-codegen/typescript": "^8.0.2",
     "@openapitools/openapi-generator-cli": "^2.13.4",
     "@types/react": "~18.2.79",
     "@types/react-native-vector-icons": "^6.4.18",

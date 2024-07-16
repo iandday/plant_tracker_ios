@@ -7,12 +7,17 @@ module.exports = {
         "./lib/plant_tracker/endpoints/PlantTrackerFromFileSpecWithTransformer.ts",
       schemas: "./lib/plant_tracker/model/",
       client: "react-query",
+      allParamsOptional: true,
       mock: false,
       prettier: true,
       override: {
         mutator: {
           path: "./lib/plant_tracker/mutator/custom-instance.ts",
           name: "customInstance",
+        },
+        query: {
+          useQuery: true,
+          useSuspenseQuery: true,
         },
       },
     },

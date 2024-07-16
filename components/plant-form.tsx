@@ -99,7 +99,11 @@ export const PlantForm = ({
         label="Area"
         options={areaList}
       />
-      <ControlledDatePicker control={control} name="p_date" />
+      <ControlledDatePicker
+        control={control}
+        name="p_date"
+        label="Purchase Date"
+      />
 
       <ControlledInput control={control} name="notes" label="Notes" multiline />
       <Button label="Save" onPress={handleSubmit(onSubmit)} />
