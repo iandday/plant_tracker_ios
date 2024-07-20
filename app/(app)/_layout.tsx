@@ -10,6 +10,7 @@ import { Flower2 } from "~/lib/icons/Flower2";
 import { Pressable } from "react-native";
 import { Text } from "~/components/ui";
 import { New } from "~/lib/icons/New";
+import { Entries } from "~/lib/icons/entries";
 
 export default function TabLayout() {
   const status = useAuth.use.status();
@@ -17,16 +18,32 @@ export default function TabLayout() {
 
   const CreateNewPlant = () => {
     return (
-      <Link href="/plant/new" asChild>
+      <Link
+        href='/plant/new'
+        asChild
+      >
         <Pressable>
-          <New className="text-primary" />
+          <New className='text-primary' />
+        </Pressable>
+      </Link>
+    );
+  };
+
+  const CreateNewEntry = () => {
+    return (
+      <Link
+        href='/entry/new'
+        asChild
+      >
+        <Pressable>
+          <New className='text-primary' />
         </Pressable>
       </Link>
     );
   };
 
   if (status === "signOut") {
-    return <Redirect href="/login" />;
+    return <Redirect href='/login' />;
   }
   return (
     <Drawer
@@ -35,7 +52,7 @@ export default function TabLayout() {
       }}
     >
       <Drawer.Screen
-        name="index"
+        name='index'
         options={{
           title: "Home",
           drawerIcon: ({ color }) => <Home color={color} />,
@@ -44,7 +61,7 @@ export default function TabLayout() {
       />
 
       <Drawer.Screen
-        name="my-plants"
+        name='my-plants'
         options={{
           title: "My Plants",
           drawerIcon: ({ color }) => <Flower2 color={color} />,
@@ -58,7 +75,21 @@ export default function TabLayout() {
         }}
       />
       <Drawer.Screen
-        name="settings"
+        name='my-entries'
+        options={{
+          title: "My Entries",
+          drawerIcon: ({ color }) => <Entries color={color} />,
+          headerRight: () => <CreateNewEntry />,
+          headerSearchBarOptions: {
+            placeholder: "Search",
+            onChangeText: (event) => {
+              console.log(event.nativeEvent.text);
+            },
+          },
+        }}
+      />
+      <Drawer.Screen
+        name='settings'
         options={{
           title: "Settings",
           drawerIcon: ({ color }) => <Info color={color} />,

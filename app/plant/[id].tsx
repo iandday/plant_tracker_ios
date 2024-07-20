@@ -235,16 +235,14 @@ export default function Plant() {
           </View>
 
           {activityData && entryData && entryData.length > 0 ? (
-            <View className='pt-2 text-primary  dark:text-primaryDark flex pb-500'>
-              <View className='items-center'>
-                <Text className='pt-2 text-lg text-primary  dark:text-primaryDark'>Activity Entries</Text>
-              </View>
-              <View className=' w-full  pt-2'>
-                <ActivityList
-                  entryData={entryData}
-                  activityData={activityData}
-                />
-              </View>
+            <View className='height-200 flex w-full flex-col justify-around pt-2'>
+              <Text className=' text-lg text-center flex-0 pt-2 text-primary dark:text-primaryDark'>
+                Activity Entries
+              </Text>
+              <ActivityList
+                entryData={entryData}
+                activityData={activityData}
+              />
             </View>
           ) : null}
         </View>

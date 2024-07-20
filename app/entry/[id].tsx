@@ -94,7 +94,7 @@ export default function ActivityEntry() {
           setShowModal={setShowModal}
           handleMutate={handleMutate}
         />
-        <Stack.Screen options={{ title: plantData.name, headerBackTitle: "Plant Detail" }} />
+        <Stack.Screen options={{ title: plantData.name, headerBackTitle: "Back" }} />
 
         <View className='height-200 flex w-full flex-column items-center pt-2 pb-5'>
           <View className='p-2'>

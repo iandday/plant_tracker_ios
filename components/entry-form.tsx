@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import dayjs, { Dayjs } from "dayjs";
+
 import * as ImagePicker from "expo-image-picker";
 import React, { useState } from "react";
 import type { SubmitHandler } from "react-hook-form";
@@ -171,7 +171,7 @@ export const ActivityEntryForm = ({
         />
       ) : (
         <Button
-          label='Add Photo'
+          label='Add/Change Photo'
           onPress={() => setShowModal(true)}
         />
       )}

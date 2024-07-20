@@ -21,7 +21,7 @@ const categories = [
   {
     name: "Entries",
     icon: "hand-holding-heart",
-    action: () => router.navigate("/my-plants"),
+    action: () => router.navigate("/my-entries"),
   },
   {
     name: "Tasks",
@@ -64,42 +64,41 @@ export default function Index() {
 
   if (plantData && graveyardData) {
     return (
-      <SafeAreaView className="bg-background flex flex-1 flexfl-col items-stretch">
-        <View className="px-4 h-full">
+      <SafeAreaView className='bg-background flex flex-1 flexfl-col items-stretch'>
+        <View className='px-4 h-full'>
           {/* Header */}
-          <View className="grow-0 h-600 ">
-            <View className="flex flex-col m-5">
-              <Text className="my-3 text-center text-5xl font-bold pb-5">
-                {token?.first_name}'s Plants
-              </Text>
-              <PlantCount plantData={plantData} graveyardData={graveyardData} />
+          <View className='grow-0 h-600 '>
+            <View className='flex flex-col m-5'>
+              <Text className='my-3 text-center text-5xl font-bold pb-5'>{token?.first_name}'s Plants</Text>
+              <PlantCount
+                plantData={plantData}
+                graveyardData={graveyardData}
+              />
             </View>
           </View>
           {/* Content */}
-          <View className="grow">
+          <View className='grow'>
             <Text>Content Here</Text>
           </View>
           {/* Footer */}
-          <View className="grow-0 h-100 pb-5">
-            <View className="flex flex-row items-center justify-center">
+          <View className='grow-0 h-100 pb-5'>
+            <View className='flex flex-row items-center justify-center'>
               {categories.map((item, index) => {
                 return (
                   <View
-                    className="bg-secondary rounded-full p-2 m-1"
+                    className='bg-secondary rounded-full p-2 m-1'
                     key={index}
                   >
                     <TouchableOpacity
-                      className="flex-1, items-center px-4"
+                      className='flex-1, items-center px-4'
                       onPress={item.action}
                     >
                       <FontAwesome6
                         name={item.icon}
                         size={24}
-                        className="text-secondary-foreground"
+                        className='text-secondary-foreground py-1'
                       />
-                      <Text className="text-secondary-foreground">
-                        {item.name}
-                      </Text>
+                      <Text className='text-secondary-foreground'>{item.name}</Text>
                     </TouchableOpacity>
                   </View>
                 );

@@ -2,17 +2,13 @@ import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import * as React from "react";
 import { Background } from "~/components/background";
 import { ActivityEntryForm, ActivityEntryFormProps } from "~/components/entry-form";
-import type { PlantFormProps } from "~/components/plant-form";
-import { PlantForm } from "~/components/plant-form";
-
+import dayjs from "dayjs";
 import { Text } from "~/components/ui";
 import {
   useTrackerApiViewActivityListActivities,
-  useTrackerApiViewAreaListAreas,
   useTrackerApiViewEntryGetEntry,
-  useTrackerApiViewPlantGetPlant,
+  useTrackerApiViewEntryPostEntry,
   useTrackerApiViewPlantListPlants,
-  useTrackerApiViewPlantPostPlant,
 } from "~/lib/plant_tracker/endpoints/PlantTrackerFromFileSpecWithTransformer";
 
 /* eslint-disable max-lines-per-function */
@@ -41,44 +37,37 @@ export default function Edit() {
     data: activityData,
   } = useTrackerApiViewActivityListActivities();
 
-  // const {
-  //   isLoading: areaIsLoading,
-  //   isError: areaisError,
-  //   error: areaError,
-  //   data: areaData,
-  // } = useTrackerApiViewAreaListAreas();
-  // const {
-  //   mutate: plantMutate,
-  //   isSuccess: plantMutateIsSuccess,
-  //   error: plantMutateError,
-  //   reset: plantMutateReset,
-  // } = useTrackerApiViewPlantPostPlant({});
+  const {
+    mutate: entryMutate,
+    isSuccess: entryMutateIsSuccess,
+    error: entryMutateError,
+    reset: entryMutateReset,
+  } = useTrackerApiViewEntryPostEntry();
 
   const router = useRouter();
   const handleSubmit: ActivityEntryFormProps["onSubmit"] = async (data) => {
-    console.log(data);
-    // plantMutate(
-    //   {
-    //     plantId: local.id!,
-    //     data: {
-    //       area_id: data.area!,
-    //       purchase_date: data.p_date.format("YYYY-MM-DD"),
-    //       name: data.name,
-    //       common_name: data.common_name,
-    //       scientific_name: data.scientific_name,
-    //       notes: data.notes,
-    //     },
-    //   },
-    //   {
-    //     onSuccess() {
-    //       plantRefetch();
-    //       router.navigate(`/plant/${local.id}`);
-    //     },
-    //     onError: (err) => {
-    //       console.log(err);
-    //     },
-    //   }
-    // );
+    entryMutate(
+      {
+        entryId: local.id!,
+        data: {
+          plant_id: data.plant_id,
+          activities: data.activities,
+          plant_health: data.plant_health,
+          Timestamp: dayjs(data.timestamp).toISOString(),
+          notes: data.notes,
+          file: data.photo,
+        },
+      },
+      {
+        onSuccess() {
+          entryRefetch();
+          router.navigate(`/entry/${local.id}`);
+        },
+        onError: (err) => {
+          console.log(err);
+        },
+      }
+    );
   };
 
   if (entryIsLoading || allPlantsIsLoading || activityIsLoading) {
