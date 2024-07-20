@@ -5,11 +5,14 @@ import { ActivityEntryForm, ActivityEntryFormProps } from "~/components/entry-fo
 import dayjs from "dayjs";
 import { Text } from "~/components/ui";
 import {
+  getTrackerApiViewEntryGetEntryQueryKey,
+  getTrackerApiViewEntryListEntriesQueryKey,
   useTrackerApiViewActivityListActivities,
   useTrackerApiViewEntryGetEntry,
   useTrackerApiViewEntryPostEntry,
   useTrackerApiViewPlantListPlants,
 } from "~/lib/plant_tracker/endpoints/PlantTrackerFromFileSpecWithTransformer";
+import { queryClient } from "../_layout";
 
 /* eslint-disable max-lines-per-function */
 export default function Edit() {
@@ -60,7 +63,8 @@ export default function Edit() {
       },
       {
         onSuccess() {
-          entryRefetch();
+          queryClient.invalidateQueries(getTrackerApiViewEntryGetEntryQueryKey({}));
+          queryClient.invalidateQueries(getTrackerApiViewEntryListEntriesQueryKey({}));
           router.navigate(`/entry/${local.id}`);
         },
         onError: (err) => {

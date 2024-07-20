@@ -3,13 +3,16 @@ import * as React from "react";
 import { Background } from "~/components/background";
 import type { PlantFormProps } from "~/components/plant-form";
 import { PlantForm } from "~/components/plant-form";
-
 import { Text } from "~/components/ui";
 import {
+  getTrackerApiViewPlantGetPlantQueryKey,
+  getTrackerApiViewPlantListPlantsQueryKey,
   useTrackerApiViewAreaListAreas,
   useTrackerApiViewPlantGetPlant,
+  useTrackerApiViewPlantListPlants,
   useTrackerApiViewPlantPostPlant,
 } from "~/lib/plant_tracker/endpoints/PlantTrackerFromFileSpecWithTransformer";
+import { queryClient } from "../_layout";
 
 /* eslint-disable max-lines-per-function */
 export default function Edit() {
@@ -22,6 +25,8 @@ export default function Edit() {
     data: plantData,
     refetch: plantRefetch,
   } = useTrackerApiViewPlantGetPlant(local.id!);
+
+  const { refetch: allPlantsRefetch } = useTrackerApiViewPlantListPlants();
 
   const {
     isLoading: areaIsLoading,
@@ -48,11 +53,13 @@ export default function Edit() {
           common_name: data.common_name,
           scientific_name: data.scientific_name,
           notes: data.notes,
+          file: data.photo,
         },
       },
       {
         onSuccess() {
-          plantRefetch();
+          queryClient.invalidateQueries(getTrackerApiViewPlantGetPlantQueryKey({}));
+          queryClient.invalidateQueries(getTrackerApiViewPlantListPlantsQueryKey({}));
           router.navigate(`/plant/${local.id}`);
         },
         onError: (err) => {
@@ -75,9 +82,7 @@ export default function Edit() {
             headerBackTitle: "Plant Detail",
           }}
         />
-        <Text className=" text-center text-2xl mb-0">
-          Edit {plantData.name}
-        </Text>
+        <Text className=' text-center text-2xl mb-0'>Edit {plantData.name}</Text>
         <PlantForm
           plantData={plantData}
           areaData={areaData}

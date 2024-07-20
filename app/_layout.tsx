@@ -24,7 +24,7 @@ const DARK_THEME: Theme = {
   colors: NAV_THEME.dark,
 };
 
-const queryClient = new QueryClient();
+export const queryClient = new QueryClient();
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -80,8 +80,14 @@ export default function RootLayout() {
           <BottomSheetModalProvider>
             <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
             <Stack>
-              <Stack.Screen name="(app)" options={{ headerShown: false }} />
-              <Stack.Screen name="login" options={{ headerShown: false }} />
+              <Stack.Screen
+                name='(app)'
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name='login'
+                options={{ headerShown: false }}
+              />
             </Stack>
           </BottomSheetModalProvider>
         </GestureHandlerRootView>
