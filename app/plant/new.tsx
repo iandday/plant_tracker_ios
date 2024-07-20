@@ -36,6 +36,7 @@ export default function NewPlant() {
           common_name: data.common_name,
           scientific_name: data.scientific_name,
           notes: data.notes,
+          file: data.photo,
         },
       },
       {
@@ -62,8 +63,11 @@ export default function NewPlant() {
             headerBackTitle: "All Plants",
           }}
         />
-        <Text className=" text-center text-2xl mb-0">New Plant</Text>
-        <PlantForm areaData={areaData} onSubmit={handleSubmit} />
+        <Text className=' text-center text-2xl mb-0'>New Plant</Text>
+        <PlantForm
+          areaData={areaData}
+          onSubmit={handleSubmit}
+        />
       </Background>
     );
   } else {
