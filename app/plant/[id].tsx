@@ -1,25 +1,15 @@
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import * as React from "react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Background } from "~/components/background";
 import ActivityList from "~/components/plant-detail/activity-list";
 import PlantInfo from "~/components/plant-detail/plantInfo";
 import { PlantPhoto } from "~/components/plant-photo";
-import { Button, Text, View, TouchableOpacity, CustomBackdrop } from "~/components/ui";
-import * as ImagePicker from "expo-image-picker";
-import {
-  BottomSheetBackgroundProps,
-  BottomSheetModal,
-  BottomSheetModalProvider,
-  BottomSheetView,
-} from "@gorhom/bottom-sheet";
-import Animated, { useAnimatedStyle } from "react-native-reanimated";
+import { Button, Text, View } from "~/components/ui";
 import {
   useTrackerApiViewActivityListActivities,
   useTrackerApiViewAreaGetArea,
   useTrackerApiViewEntryGetPlantEntries,
   useTrackerApiViewPlantGetPlant,
-  useTrackerApiViewPlantPostPlant,
 } from "~/lib/plant_tracker/endpoints/PlantTrackerFromFileSpecWithTransformer";
 
 /* eslint-disable max-lines-per-function */
@@ -51,95 +41,6 @@ export default function Plant() {
     error: areaError,
     data: areaData,
   } = useTrackerApiViewAreaGetArea(plantData?.area);
-  const { mutate: plantMutate, isSuccess: plantIsSuccess } = useTrackerApiViewPlantPostPlant();
-
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [showModal, setShowModal] = useState<boolean>(false);
-
-  const captureImage = async () => {
-    const cameraPermissions = await ImagePicker.getCameraPermissionsAsync();
-    if (!cameraPermissions.granted) {
-      const newCameraPermissions = await ImagePicker.requestCameraPermissionsAsync();
-      if (!newCameraPermissions.granted) {
-        console.log("Failed to grant permissions");
-      }
-    }
-
-    let result = await ImagePicker.launchCameraAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-    }
-  };
-
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      //aspect: [4, 3],
-      quality: 1,
-    });
-    if (!result.canceled) {
-      setShowModal(!showModal);
-      plantMutate({
-        plantId: local.id!,
-        data: {
-          file: {
-            uri: result.assets[0].uri!,
-            name: result.assets[0].fileName || `${local.id}-main`,
-            type: result.assets[0].mimeType!,
-          },
-        },
-      });
-    }
-  };
-
-  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-  const snapPoints = useMemo(() => ["25%", "25%"], []);
-  const handleSheetChanges = useCallback((index: number) => {
-    console.log("handleSheetChanges", index);
-  }, []);
-
-  useEffect(() => {
-    const setModal = async () => {
-      if (showModal) {
-        bottomSheetModalRef.current?.present();
-      } else {
-        bottomSheetModalRef.current?.dismiss();
-      }
-    };
-    setModal();
-  }, [showModal]);
-
-  useEffect(() => {
-    const refreshData = async () => {
-      if (plantIsSuccess) {
-        plantRefetch();
-      }
-    };
-    refreshData();
-  }, [plantIsSuccess]);
-
-  const CustomBackground: React.FC<BottomSheetBackgroundProps> = ({ style, animatedIndex }) => {
-    const containerAnimatedStyle = useAnimatedStyle(() => ({
-      backgroundColor: "#020303",
-    }));
-    const containerStyle = React.useMemo(
-      () => [style, containerAnimatedStyle],
-      [style, containerAnimatedStyle]
-    );
-    return (
-      <Animated.View
-        pointerEvents='none'
-        style={containerStyle}
-      />
-    );
-  };
 
   if (plantIsLoading || areaIsLoading || activityIsLoading || entryIsLoading) {
     return <Text>Loading</Text>;
@@ -148,49 +49,6 @@ export default function Plant() {
   if (plantData && areaData) {
     return (
       <Background>
-        <BottomSheetModal
-          ref={bottomSheetModalRef}
-          index={1}
-          snapPoints={snapPoints}
-          onChange={handleSheetChanges}
-          backdropComponent={CustomBackdrop}
-          backgroundComponent={CustomBackground}
-        >
-          <BottomSheetView className='bg-background flex-1 p-4'>
-            <Button
-              label='Take New Picture'
-              onPress={() => {
-                captureImage;
-              }}
-              variant='default'
-              fullWidth={false}
-              size='lg'
-              className='mx-10'
-            />
-
-            <Button
-              label='Select Existing Picture'
-              onPress={() => {
-                pickImage();
-              }}
-              variant='default'
-              fullWidth={false}
-              size='lg'
-              className='mx-10'
-            />
-            <Button
-              label='Cancel'
-              onPress={() => {
-                setShowModal(false);
-              }}
-              variant='default'
-              fullWidth={false}
-              size='lg'
-              className='mx-10'
-            />
-          </BottomSheetView>
-        </BottomSheetModal>
-
         <Stack.Screen options={{ title: plantData.name, headerBackTitle: "All Plants" }} />
         <View className='flex'>
           <View className='height-200 flex w-full flex-row justify-around pt-2'>
@@ -201,15 +59,13 @@ export default function Plant() {
               />
             </View>
             <View className='m-2'>
-              <TouchableOpacity onPress={() => setShowModal(!showModal)}>
-                <View className='h-64 w-64'>
-                  <PlantPhoto
-                    plant={plantData}
-                    height='64'
-                    width='full'
-                  />
-                </View>
-              </TouchableOpacity>
+              <View className='h-64 w-64'>
+                <PlantPhoto
+                  plant={plantData}
+                  height='64'
+                  width='full'
+                />
+              </View>
             </View>
           </View>
 

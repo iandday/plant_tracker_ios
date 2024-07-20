@@ -55,10 +55,12 @@ export default function ActivityList({ entryData, activityData }: listProps) {
         onPageScroll={onPageScroll}
       >
         {entryData.map((item, index) => (
-          <View className='bg-background mx-10 '>
+          <View
+            className='bg-background mx-10 '
+            key={index}
+          >
             <View className='h-full w-full items-center flex flex-col border-2 rounded-xl border-primary pt-5 '>
               <TouchableOpacity
-                key={index}
                 className=''
                 onPress={() => {
                   router.navigate(`/entry/${item.id}`);

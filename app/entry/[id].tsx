@@ -66,22 +66,6 @@ export default function ActivityEntry() {
     data: activityData,
   } = useTrackerApiViewActivityListActivities();
 
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [showModal, setShowModal] = useState<boolean>(false);
-
-  const handleMutate = (data: ImagePicker.ImagePickerSuccessResult) => {
-    console.log(data);
-  };
-
-  // useEffect(() => {
-  //   const refreshData = async () => {
-  //     if (plantIsSuccess) {
-  //       plantRefetch();
-  //     }
-  //   };
-  //   refreshData();
-  // }, [plantIsSuccess]);
-
   if (plantIsLoading || entryIsLoading) {
     return <Text>Loading</Text>;
   }
@@ -89,11 +73,6 @@ export default function ActivityEntry() {
   if (activityData && plantData && entryData) {
     return (
       <Background>
-        <SelectPhoto
-          showModal={showModal}
-          setShowModal={setShowModal}
-          handleMutate={handleMutate}
-        />
         <Stack.Screen options={{ title: plantData.name, headerBackTitle: "Back" }} />
 
         <View className='height-200 flex w-full flex-column items-center pt-2 pb-5'>
@@ -104,15 +83,13 @@ export default function ActivityEntry() {
             />
           </View>
           <View className='m-2'>
-            <TouchableOpacity onPress={() => setShowModal(!showModal)}>
-              <View className='h-64 w-64'>
-                <EntryPhoto
-                  entry={entryData}
-                  height='64'
-                  width='full'
-                />
-              </View>
-            </TouchableOpacity>
+            <View className='h-64 w-64'>
+              <EntryPhoto
+                entry={entryData}
+                height='64'
+                width='full'
+              />
+            </View>
           </View>
         </View>
 
