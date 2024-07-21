@@ -26,12 +26,12 @@ const categories = [
   {
     name: "Tasks",
     icon: "list",
-    action: () => router.navigate("/my-plants"),
+    action: () => router.navigate("/"),
   },
   {
     name: "Graveyard",
     icon: "skull-crossbones",
-    action: () => router.navigate("/my-plants"),
+    action: () => router.navigate("/my-graveyard"),
   },
 ];
 

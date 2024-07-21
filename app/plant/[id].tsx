@@ -1,16 +1,21 @@
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import * as React from "react";
 import { Background } from "~/components/background";
+import dayjs, { type Dayjs } from "dayjs";
 import ActivityList from "~/components/plant-detail/activity-list";
 import PlantInfo from "~/components/plant-detail/plantInfo";
 import { PlantPhoto } from "~/components/plant-photo";
 import { Button, Text, View } from "~/components/ui";
 import {
+  getTrackerApiViewPlantGetPlantQueryKey,
+  getTrackerApiViewPlantListPlantsQueryKey,
   useTrackerApiViewActivityListActivities,
   useTrackerApiViewAreaGetArea,
   useTrackerApiViewEntryGetPlantEntries,
   useTrackerApiViewPlantGetPlant,
+  useTrackerApiViewPlantPostPlant,
 } from "~/lib/plant_tracker/endpoints/PlantTrackerFromFileSpecWithTransformer";
+import { queryClient } from "../_layout";
 
 /* eslint-disable max-lines-per-function */
 export default function Plant() {
@@ -41,7 +46,13 @@ export default function Plant() {
     error: areaError,
     data: areaData,
   } = useTrackerApiViewAreaGetArea(plantData?.area);
-
+  const {
+    mutate: plantMutate,
+    isSuccess: plantMutateIsSuccess,
+    error: plantMutateError,
+    reset: plantMutateReset,
+  } = useTrackerApiViewPlantPostPlant({});
+  console.log(plantData);
   if (plantIsLoading || areaIsLoading || activityIsLoading || entryIsLoading) {
     return <Text>Loading</Text>;
   }
@@ -86,6 +97,30 @@ export default function Plant() {
                   pathname: `/entry/new`,
                   params: { id: plantData.id },
                 });
+              }}
+            />
+            <Button
+              label='Send to Graveyard'
+              variant='destructive'
+              onPress={() => {
+                plantMutate(
+                  {
+                    plantId: local.id!,
+                    data: {
+                      graveyard: true,
+                      death_date: dayjs(new Date()).format("YYYY-MM-DD"),
+                    },
+                  },
+                  {
+                    onSuccess() {
+                      queryClient.invalidateQueries(getTrackerApiViewPlantGetPlantQueryKey({}));
+                      queryClient.invalidateQueries(getTrackerApiViewPlantListPlantsQueryKey({}));
+                    },
+                    onError: (err) => {
+                      console.log(err);
+                    },
+                  }
+                );
               }}
             />
           </View>

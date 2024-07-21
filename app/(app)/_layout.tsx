@@ -7,6 +7,7 @@ import { useIsBaseURLSet } from "~/core/use-is-base-url-set";
 import { Home } from "~/lib/icons/home";
 import { Info } from "~/lib/icons/Info";
 import { Flower2 } from "~/lib/icons/Flower2";
+import { Graveyard } from "~/lib/icons/Graveyard";
 import { Pressable } from "react-native";
 import { Text } from "~/components/ui";
 import { New } from "~/lib/icons/New";
@@ -89,11 +90,32 @@ export default function TabLayout() {
         }}
       />
       <Drawer.Screen
+        name='my-graveyard'
+        options={{
+          title: "My Graveyard",
+          drawerIcon: ({ color }) => <Graveyard color={color} />,
+          //headerRight: () => <CreateNewPlant />,
+          headerSearchBarOptions: {
+            placeholder: "Search",
+            onChangeText: (event) => {
+              console.log(event.nativeEvent.text);
+            },
+          },
+        }}
+      />
+      <Drawer.Screen
         name='settings'
         options={{
           title: "Settings",
           drawerIcon: ({ color }) => <Info color={color} />,
           // headerRight: () => <CreateNewPostLink />,
+        }}
+      />
+      <Drawer.Screen
+        name='profile'
+        options={{
+          title: "profile",
+          drawerItemStyle: { display: "none" },
         }}
       />
     </Drawer>

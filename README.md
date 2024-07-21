@@ -3,15 +3,13 @@
 ## Features
 
 - Plants
-  - [x] Create Plant Entries
-  - [x] List Plant Entries
-  - [x] Edit Plant Entry
-  - [x] Add/Edit Plant Photo
+  - [x] Create/Edit plant entries with photo
+  - [x] List Plant entries
+  - [x] List graveyard entries
   - [ ] Search plant entries
 - Activity Entries
-  - [x] Create activity entry with photo
+  - [x] Create/edit activity entry with photo
   - [x] List activity entries
-  - [x] Edit activity entry and photo
   - [ ] Search activity entries
 - Settings
   - [x] Edit Profile

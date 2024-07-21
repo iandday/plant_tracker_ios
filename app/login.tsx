@@ -72,7 +72,7 @@ export default function login() {
   }, []);
 
   return (
-    <KeyboardAwareScrollView className="bg-background, flex-1 pb-10">
+    <KeyboardAwareScrollView className='bg-background, flex-1 pb-10'>
       <BottomSheetModal
         ref={bottomSheetModalRef}
         index={1}
@@ -80,25 +80,19 @@ export default function login() {
         onChange={handleSheetChanges}
         backdropComponent={CustomBackdrop}
       >
-        <BottomSheetView className="bg-background flex-1 mb-10 pb-10">
-          <Text className="my-6 text-center text-5xl font-bold">
-            Plant Tracker
-          </Text>
-          <Text className="mb-2 text-center text-xl">
-            Who can remember when you watered it last?
-          </Text>
+        <BottomSheetView className='bg-background flex-1 mb-10 pb-10'>
+          <Text className='my-6 text-center text-5xl font-bold'>Plant Tracker</Text>
+          <Text className='mb-2 text-center text-xl'>Who can remember when you watered it last?</Text>
 
-          <Text className="my-1 pt-6 text-center text-lg">
-            Set your server's base URL below
-          </Text>
+          <Text className='my-1 pt-6 text-center text-lg'>Set your server's base URL below</Text>
 
           <BottomSheetTextInput
-            autoCapitalize="none"
+            autoCapitalize='none'
             autoCorrect={false}
-            placeholder="https://plant.mydomain.com"
+            placeholder='https://plant.mydomain.com'
             onChange={(value) => setBaseURL(value.nativeEvent.text)}
             className={
-              "placeholder:text-primary mx-10 mt-0 rounded-xl border-[0.5px] px-4 py-3   bg-input text:primary"
+              "placeholder:text-primary mx-10 mt-0 rounded-xl border-[0.5px] px-4 py-3   bg-input text:foreground dark:text-foreground"
             }
           />
 
@@ -107,37 +101,31 @@ export default function login() {
             onPress={() => {
               router.replace("/login");
             }}
-            variant="default"
+            variant='default'
             fullWidth={false}
-            size="lg"
-            className="m-5 "
+            size='lg'
+            className='m-5 '
           />
         </BottomSheetView>
       </BottomSheetModal>
 
-      <KeyboardAwareScrollView className="flex flex-col">
-        <Text className="text-5xl font-bold mb-6 pt-48 text-center">
-          Welcome Back!
-        </Text>
-        <Text className="text-xl font-medium  text-center py-4">
-          Sign in to your account at
-        </Text>
-        <Text className="text-xl font-medium mb-6 text-center">{baseURL}</Text>
+      <KeyboardAwareScrollView className='flex flex-col'>
+        <Text className='text-5xl font-bold mb-6 pt-48 text-center'>Welcome Back!</Text>
+        <Text className='text-xl font-medium  text-center py-4'>Sign in to your account at</Text>
+        <Text className='text-xl font-medium mb-6 text-center'>{baseURL}</Text>
         <LoginForm onSubmit={onSubmit} />
 
         <Button
-          variant="default"
+          variant='default'
           fullWidth={false}
-          label="Change Server"
+          label='Change Server'
           onPress={() => {
             bottomSheetModalRef.current?.present();
           }}
-          className="mx-7"
+          className='mx-7'
         />
         {loginError && loginError.length > 0 && (
-          <Text className="my-1 pt-6 text-center text-2xl text-destructive">
-            {loginError}
-          </Text>
+          <Text className='my-1 pt-6 text-center text-2xl text-destructive'>{loginError}</Text>
         )}
       </KeyboardAwareScrollView>
     </KeyboardAwareScrollView>
