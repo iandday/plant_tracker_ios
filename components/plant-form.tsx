@@ -6,11 +6,12 @@ import type { SubmitHandler } from "react-hook-form";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
+import { KeyboardAvoidingView, ScrollView } from "react-native";
 import type { Option } from "~/components/ui";
 import { Button, ControlledDatePicker, ControlledInput, ControlledSelect, Text, View } from "~/components/ui";
 import { AreaOut, PlantOut } from "~/lib/plant_tracker/model";
 import SelectPhoto from "./ui/select-photo";
-
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 const schema = z.object({
   name: z.string({
     required_error: "Name is required",
@@ -84,63 +85,70 @@ export const PlantForm = ({ onSubmit = () => {}, plantData = blankPlantOut, area
   });
 
   return (
-    <View className='flex-1 flex-col p-4'>
-      <ControlledInput
-        control={control}
-        name='name'
-        label='Name'
-      />
-      <ControlledInput
-        control={control}
-        name='common_name'
-        label='Common Name'
-      />
-      <ControlledInput
-        control={control}
-        name='scientific_name'
-        label='Scientific Name'
-      />
-      <ControlledSelect
-        control={control}
-        name='area'
-        label='Area'
-        options={areaList}
-      />
-      <ControlledDatePicker
-        control={control}
-        name='p_date'
-        label='Purchase Date'
-      />
+    <KeyboardAwareScrollView
+      style={{ flex: 1 }}
+      resetScrollToCoords={{ x: 0, y: 0 }}
+      contentContainerStyle={{ flex: 1 }}
+      scrollEnabled={true}
+    >
+      <View className='flex-1 flex-col p-4'>
+        <ControlledInput
+          control={control}
+          name='name'
+          label='Name'
+        />
+        <ControlledInput
+          control={control}
+          name='common_name'
+          label='Common Name'
+        />
+        <ControlledInput
+          control={control}
+          name='scientific_name'
+          label='Scientific Name'
+        />
+        <ControlledSelect
+          control={control}
+          name='area'
+          label='Area'
+          options={areaList}
+        />
+        <ControlledDatePicker
+          control={control}
+          name='p_date'
+          label='Purchase Date'
+        />
 
-      <ControlledInput
-        control={control}
-        name='notes'
-        label='Notes'
-        multiline
-      />
-      <SelectPhoto
-        showModal={showModal}
-        setShowModal={setShowModal}
-        handleMutate={handlePhotoMutate}
-      />
-      {photoSet ? (
-        <Button
-          label='Remove Photo'
-          onPress={() => {
-            resetField("photo");
-            setPhotoSet(false);
-          }}
+        <ControlledInput
+          control={control}
+          name='notes'
+          label='Notes'
+          multiline
         />
-      ) : (
-        <Button
-          label='Add/Change Photo'
-          onPress={() => setShowModal(true)}
+        <SelectPhoto
+          showModal={showModal}
+          setShowModal={setShowModal}
+          handleMutate={handlePhotoMutate}
         />
-      )}
-      <Button
-        label='Save'
-        onPress={handleSubmit(onSubmit)}
-      />
-    </View>
+        {photoSet ? (
+          <Button
+            label='Remove Photo'
+            onPress={() => {
+              resetField("photo");
+              setPhotoSet(false);
+            }}
+          />
+        ) : (
+          <Button
+            label='Add/Change Photo'
+            onPress={() => setShowModal(true)}
+          />
+        )}
+        <Button
+          label='Save'
+          onPress={handleSubmit(onSubmit)}
+        />
+      </View>
+    </KeyboardAwareScrollView>
   );
 };

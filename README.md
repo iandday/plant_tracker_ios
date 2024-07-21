@@ -15,7 +15,7 @@
   - [ ] Search activity entries
 - Settings
   - [x] Edit Profile
-  - [ ] Edit Locations
-  - [ ] Edit Areas
+  - [x] Create/Edit Locations
+  - [x] Create/Edit Areas
 - Todo
   - [ ] Pick color theme

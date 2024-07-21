@@ -4,6 +4,7 @@ import * as ImagePicker from "expo-image-picker";
 import React, { useState } from "react";
 import type { SubmitHandler } from "react-hook-form";
 import { Controller, useForm } from "react-hook-form";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scrollview";
 import * as z from "zod";
 //https://github.com/renrizzolo/react-native-sectioned-multi-select
 import type { Option } from "~/components/ui";
@@ -103,82 +104,89 @@ export const ActivityEntryForm = ({
   });
 
   return (
-    <View className='flex-1 flex-col p-4'>
-      <ControlledSelect
-        control={control}
-        name='plant_id'
-        label='Plant'
-        options={plantList}
-      />
-      {errors.plant_id && <FormError message={errors.plant_id.message} />}
+    <KeyboardAwareScrollView
+      style={{ flex: 1 }}
+      resetScrollToCoords={{ x: 0, y: 0 }}
+      contentContainerStyle={{ flex: 1 }}
+      scrollEnabled={true}
+    >
+      <View className='flex-1 flex-col p-4'>
+        <ControlledSelect
+          control={control}
+          name='plant_id'
+          label='Plant'
+          options={plantList}
+        />
+        {errors.plant_id && <FormError message={errors.plant_id.message} />}
 
-      <ControlledMultiSelect
-        control={control}
-        name='activities'
-        items={activityList}
-        selectText='Select Activities'
-        label='Activities'
-      />
-      {errors.activities && <FormError message={errors.activities.message} />}
+        <ControlledMultiSelect
+          control={control}
+          name='activities'
+          items={activityList}
+          selectText='Select Activities'
+          label='Activities'
+        />
+        {errors.activities && <FormError message={errors.activities.message} />}
 
-      <ControlledDateTimePicker
-        control={control}
-        name='timestamp'
-        label='Activity Date'
-      />
-      {errors.timestamp && <FormError message={errors.timestamp.message} />}
+        <ControlledDateTimePicker
+          control={control}
+          name='timestamp'
+          label='Activity Date'
+        />
+        {errors.timestamp && <FormError message={errors.timestamp.message} />}
 
-      <Controller
-        name='plant_health'
-        control={control}
-        rules={{ required: false }}
-        render={({ field: { onChange, value } }) => (
-          <View className='flex-row justify-between  py-5 pr-4'>
-            <Text className='text-primary text-lg mb-1'>Plant Health</Text>
+        <Controller
+          name='plant_health'
+          control={control}
+          rules={{ required: false }}
+          render={({ field: { onChange, value } }) => (
+            <View className='flex-row justify-between  py-5 pr-4'>
+              <Text className='text-primary text-lg mb-1'>Plant Health</Text>
 
-            <StarRating
-              rating={value}
-              starSize={20}
-              enableHalfStar={false}
-              onChange={onChange}
-              style={{ paddingTop: 4 }}
-            />
-          </View>
+              <StarRating
+                rating={value}
+                starSize={20}
+                enableHalfStar={false}
+                onChange={onChange}
+                style={{ paddingTop: 4 }}
+              />
+            </View>
+          )}
+        />
+        {errors.plant_health && <FormError message={errors.plant_health.message} />}
+
+        <ControlledInput
+          control={control}
+          name='notes'
+          label='Notes'
+          multiline
+        />
+        {errors.notes && <FormError message={errors.notes.message} />}
+
+        <SelectPhoto
+          showModal={showModal}
+          setShowModal={setShowModal}
+          handleMutate={handlePhotoMutate}
+        />
+        {photoSet ? (
+          <Button
+            label='Remove Photo'
+            onPress={() => {
+              resetField("photo");
+              setPhotoSet(false);
+            }}
+          />
+        ) : (
+          <Button
+            label='Add/Change Photo'
+            onPress={() => setShowModal(true)}
+          />
         )}
-      />
-      {errors.plant_health && <FormError message={errors.plant_health.message} />}
-
-      <ControlledInput
-        control={control}
-        name='notes'
-        label='Notes'
-        multiline
-      />
-      {errors.notes && <FormError message={errors.notes.message} />}
-
-      <SelectPhoto
-        showModal={showModal}
-        setShowModal={setShowModal}
-        handleMutate={handlePhotoMutate}
-      />
-      {photoSet ? (
         <Button
-          label='Remove Photo'
-          onPress={() => {
-            resetField("photo");
-            setPhotoSet(false);
-          }}
+          label='Save'
+          onPress={handleSubmit(onSubmit)}
         />
-      ) : (
-        <Button
-          label='Add/Change Photo'
-          onPress={() => setShowModal(true)}
-        />
-      )}
-      <Button
-        label='Save'
-        onPress={handleSubmit(onSubmit)}
-      />
-    </View>
+      </View>
+    </KeyboardAwareScrollView>
   );
 };

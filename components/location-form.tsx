@@ -1,30 +1,36 @@
-import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import * as React from "react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Background } from "~/components/background";
-import ActivityList from "~/components/plant-detail/activity-list";
-import PlantInfo from "~/components/plant-detail/plantInfo";
-import { PlantPhoto } from "~/components/plant-photo";
-import { Button, Text, View, TouchableOpacity, CustomBackdrop, Input } from "~/components/ui";
+import { useCallback, useEffect, useMemo, useRef } from "react";
+import { Button, CustomBackdrop, ControlledInput } from "~/components/ui";
 import { BottomSheetBackgroundProps, BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 import Animated, { useAnimatedStyle } from "react-native-reanimated";
 import { LocationOut } from "~/lib/plant_tracker/model";
+import { z } from "zod";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { FormError } from "./ui/form-error";
 
-interface LocationFormProps {
+const schema = z.object({
+  name: z.string({
+    required_error: "Location is required",
+  }),
+});
+type FormType = z.infer<typeof schema>;
+
+export type LocationFormProps = {
   showModal: boolean;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
   locationData?: LocationOut;
-  handleMutate: any;
-}
+  onSubmit: SubmitHandler<FormType>;
+};
 
 export default function LocationForm({
   showModal,
   setShowModal,
-  handleMutate,
+  onSubmit,
   locationData = undefined,
 }: LocationFormProps) {
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-  const snapPoints = useMemo(() => ["25%", "25%"], []);
+  const snapPoints = useMemo(() => ["75%", "75%"], []);
   const handleSheetChanges = useCallback((index: number) => {
     console.log("handleSheetChanges", index);
   }, []);
@@ -44,6 +50,20 @@ export default function LocationForm({
       />
     );
   };
+
+  const {
+    handleSubmit,
+    control,
+    setValue,
+    resetField,
+    reset,
+    formState: { errors },
+  } = useForm<FormType>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      name: locationData?.name,
+    },
+  });
 
   useEffect(() => {
     const setModal = async () => {
@@ -68,18 +88,16 @@ export default function LocationForm({
       backgroundComponent={CustomBackground}
     >
       <BottomSheetView className='bg-background flex-1 p-4'>
-        <Input
-          onChange={(e) => {
-            setNewLoc(e.nativeEvent.text);
-          }}
+        <ControlledInput
+          control={control}
+          name='name'
+          label='Name'
         />
+        {errors.name && <FormError message={errors.name.message} />}
 
         <Button
           label='Submit'
-          onPress={() => {
-            handleMutate(newLoc);
-            setShowModal(false);
-          }}
+          onPress={handleSubmit(onSubmit)}
           variant='default'
           fullWidth={false}
           size='lg'

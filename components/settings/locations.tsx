@@ -1,22 +1,18 @@
-import { BottomSheetBackgroundProps, BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
-import React, { useCallback, useMemo, useRef, useState } from "react";
-import { useEffect } from "react";
-import { Animated, ScrollView, View } from "react-native";
-import { useAnimatedStyle } from "react-native-reanimated";
+import React, { useState } from "react";
+
 import { Button, Text } from "~/components/ui";
-import { Input } from "react-native-elements";
+
 import { queryClient } from "../../app/_layout";
 import {
   getTrackerApiViewLocationListLocationsQueryKey,
   useLocationPatchLocation,
   useTrackerApiViewLocationCreateLocation,
-  useTrackerApiViewLocationGetLocation,
-  useTrackerApiViewLocationGetLocationSuspense,
   useTrackerApiViewLocationListLocations,
 } from "~/lib/plant_tracker/endpoints/PlantTrackerFromFileSpecWithTransformer";
-import LocationForm from "../location-form";
-import Checkbox from "expo-checkbox";
+import LocationForm, { LocationFormProps } from "../location-form";
+
 import BouncyCheckbox from "react-native-bouncy-checkbox";
+import { Background } from "../background";
 
 export default function Locations() {
   const [showNewModal, setShowNewModal] = useState<boolean>(false);
@@ -41,11 +37,12 @@ export default function Locations() {
     }
   };
 
-  const handleEditMutate = (data: string) => {
+  const handleEditMutate: LocationFormProps["onSubmit"] = async (data) => {
     locationMutate(
-      { locationId: selectedIds[0], data: { name: data } },
+      { locationId: selectedIds[0], data: { name: data.name } },
       {
         onSuccess() {
+          setShowEditModal(false);
           queryClient.invalidateQueries(getTrackerApiViewLocationListLocationsQueryKey({}));
         },
         onError() {},
@@ -53,11 +50,12 @@ export default function Locations() {
     );
   };
 
-  const handleNewMutate = (data: string) => {
+  const handleNewMutate: LocationFormProps["onSubmit"] = async (data) => {
     locationNewMutate(
-      { data: { name: data } },
+      { data: { name: data.name } },
       {
         onSuccess() {
+          setShowNewModal(false);
           queryClient.invalidateQueries(getTrackerApiViewLocationListLocationsQueryKey({}));
         },
         onError() {},
@@ -67,7 +65,7 @@ export default function Locations() {
 
   if (locationData) {
     return (
-      <ScrollView>
+      <Background>
         {locationData?.map((obj, index) => {
           return (
             <BouncyCheckbox
@@ -78,7 +76,7 @@ export default function Locations() {
               text={obj.name}
               iconStyle={{ borderColor: "red" }}
               innerIconStyle={{ borderWidth: 2 }}
-              textStyle={{ fontFamily: "JosefinSans-Regular", color: "white" }}
+              textStyle={{ fontFamily: "JosefinSans-Regular", color: "white", textDecorationLine: "none" }}
               onPress={(isChecked: boolean) => {
                 handleCheckboxChange(obj.id, isChecked);
               }}
@@ -102,7 +100,7 @@ export default function Locations() {
               showModal={showEditModal}
               setShowModal={setShowEditModal}
               locationData={locationData.find((x) => x.id === selectedIds[0])}
-              handleMutate={handleEditMutate}
+              onSubmit={handleEditMutate}
             />
           </>
         ) : null}
@@ -119,9 +117,9 @@ export default function Locations() {
         <LocationForm
           showModal={showNewModal}
           setShowModal={setShowNewModal}
-          handleMutate={handleNewMutate}
+          onSubmit={handleNewMutate}
         />
-      </ScrollView>
+      </Background>
     );
   }
 }
