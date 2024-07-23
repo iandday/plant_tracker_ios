@@ -11,7 +11,7 @@ import type { Option } from "~/components/ui";
 import { Button, ControlledDatePicker, ControlledInput, ControlledSelect, Text, View } from "~/components/ui";
 import { AreaOut, PlantOut } from "~/lib/plant_tracker/model";
 import SelectPhoto from "./ui/select-photo";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scrollview";
 const schema = z.object({
   name: z.string({
     required_error: "Name is required",

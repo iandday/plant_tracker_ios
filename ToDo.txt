@@ -9,7 +9,7 @@ Run in expo
 Build to test flight
 	Bump version in app.json
 	eas build --profile production --platform ios --local
-	Upload artifact via transport
+	Upload artifact via transporter
 	
 
 Run on phone
