@@ -45,7 +45,9 @@ export default function Locations() {
           setShowEditModal(false);
           queryClient.invalidateQueries(getTrackerApiViewLocationListLocationsQueryKey({}));
         },
-        onError() {},
+        onError() {
+          setShowEditModal(false);
+        },
       }
     );
   };
@@ -58,7 +60,9 @@ export default function Locations() {
           setShowNewModal(false);
           queryClient.invalidateQueries(getTrackerApiViewLocationListLocationsQueryKey({}));
         },
-        onError() {},
+        onError() {
+          setShowNewModal(false);
+        },
       }
     );
   };

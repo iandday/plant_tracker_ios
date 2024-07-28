@@ -49,6 +49,7 @@ export default function Areas() {
         },
         onError(error) {
           console.log(error);
+          setShowEditModal(false);
         },
       }
     );
@@ -60,9 +61,11 @@ export default function Areas() {
       {
         onSuccess() {
           queryClient.invalidateQueries(getTrackerApiViewAreaListAreasQueryKey({}));
+          setShowNewModal(false);
         },
         onError(error) {
           console.log(error);
+          setShowNewModal(false);
         },
       }
     );
