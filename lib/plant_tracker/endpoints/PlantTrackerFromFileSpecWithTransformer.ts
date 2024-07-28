@@ -2158,6 +2158,9 @@ export const trackerApiViewPlantPostPlant = (
   if (trackerApiViewPlantPostPlantBody.notes !== undefined) {
     formData.append("notes", trackerApiViewPlantPostPlantBody.notes);
   }
+  if (trackerApiViewPlantPostPlantBody.area_id !== undefined) {
+    formData.append("area_id", trackerApiViewPlantPostPlantBody.area_id);
+  }
   if (trackerApiViewPlantPostPlantBody.file !== undefined) {
     formData.append("file", trackerApiViewPlantPostPlantBody.file);
   }

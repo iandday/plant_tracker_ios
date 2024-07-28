@@ -43,11 +43,12 @@ export default function Edit() {
 
   const router = useRouter();
   const handleSubmit: PlantFormProps["onSubmit"] = async (data) => {
+    console.log(data);
     plantMutate(
       {
         plantId: local.id!,
         data: {
-          area_id: data.area!,
+          area_id: data.area,
           purchase_date: data.p_date.format("YYYY-MM-DD"),
           name: data.name,
           common_name: data.common_name,

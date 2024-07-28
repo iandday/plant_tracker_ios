@@ -5,12 +5,14 @@
  * API for interacting with the Plant Tracker application
  * OpenAPI spec version: 1.0.0
  */
+import type { PlantPostAreaId } from "./plantPostAreaId";
 import type { PlantPostCommonName } from "./plantPostCommonName";
 import type { PlantPostName } from "./plantPostName";
 import type { PlantPostNotes } from "./plantPostNotes";
 import type { PlantPostScientificName } from "./plantPostScientificName";
 
 export interface PlantPost {
+  area_id?: PlantPostAreaId;
   common_name?: PlantPostCommonName;
   death_date?: string;
   graveyard?: boolean;

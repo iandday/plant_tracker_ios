@@ -8,12 +8,11 @@
 import type { EntryPostNotes } from "./entryPostNotes";
 import type { EntryPostPlantHealth } from "./entryPostPlantHealth";
 import type { EntryPostPlantId } from "./entryPostPlantId";
-import type { EntryPostTimestamp } from "./entryPostTimestamp";
 
 export interface EntryPost {
   activities: string[];
   notes?: EntryPostNotes;
   plant_health?: EntryPostPlantHealth;
   plant_id?: EntryPostPlantId;
-  Timestamp?: EntryPostTimestamp;
+  Timestamp?: string;
 }

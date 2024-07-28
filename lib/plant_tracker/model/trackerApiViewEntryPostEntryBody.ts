@@ -8,7 +8,6 @@
 import type { TrackerApiViewEntryPostEntryBodyNotes } from "./trackerApiViewEntryPostEntryBodyNotes";
 import type { TrackerApiViewEntryPostEntryBodyPlantHealth } from "./trackerApiViewEntryPostEntryBodyPlantHealth";
 import type { TrackerApiViewEntryPostEntryBodyPlantId } from "./trackerApiViewEntryPostEntryBodyPlantId";
-import type { TrackerApiViewEntryPostEntryBodyTimestamp } from "./trackerApiViewEntryPostEntryBodyTimestamp";
 
 export type TrackerApiViewEntryPostEntryBody = {
   activities: string[];
@@ -16,5 +15,5 @@ export type TrackerApiViewEntryPostEntryBody = {
   notes?: TrackerApiViewEntryPostEntryBodyNotes;
   plant_health?: TrackerApiViewEntryPostEntryBodyPlantHealth;
   plant_id?: TrackerApiViewEntryPostEntryBodyPlantId;
-  Timestamp?: TrackerApiViewEntryPostEntryBodyTimestamp;
+  Timestamp?: string;
 };
