@@ -1,29 +1,9 @@
-import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import * as React from "react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Background } from "~/components/background";
-import ActivityList from "~/components/plant-detail/activity-list";
-import PlantInfo from "~/components/plant-detail/plantInfo";
-import { PlantPhoto } from "~/components/plant-photo";
-import { Button, Text, View, TouchableOpacity, CustomBackdrop } from "~/components/ui";
+import { useCallback, useEffect, useMemo, useRef } from "react";
+import { Button, CustomBackdrop } from "~/components/ui";
 import * as ImagePicker from "expo-image-picker";
-import {
-  BottomSheetBackgroundProps,
-  BottomSheetModal,
-  BottomSheetModalProvider,
-  BottomSheetView,
-} from "@gorhom/bottom-sheet";
+import { BottomSheetBackgroundProps, BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 import Animated, { useAnimatedStyle } from "react-native-reanimated";
-import {
-  useTrackerApiViewActivityListActivities,
-  useTrackerApiViewAreaGetArea,
-  useTrackerApiViewEntryGetEntry,
-  useTrackerApiViewEntryGetPlantEntries,
-  useTrackerApiViewPlantGetPlant,
-  useTrackerApiViewPlantPostPlant,
-} from "~/lib/plant_tracker/endpoints/PlantTrackerFromFileSpecWithTransformer";
-import { usePlantServiceTrackerApiViewPlantGetPlant } from "~/lib/api/queries";
-import EntryInfo from "~/components/entry-detail/entryInfo";
 
 interface selectPhotoProps {
   showModal: boolean;
@@ -49,7 +29,8 @@ export default function SelectPhoto({ showModal, setShowModal, handleMutate }: s
     });
 
     if (!result.canceled) {
-      setImage(result.assets[0].uri);
+      setShowModal(!showModal);
+      handleMutate(result);
     }
   };
 

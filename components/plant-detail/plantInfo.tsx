@@ -24,13 +24,13 @@ export default function plantInfo({ plantData, areaData }: plantCountProps) {
   ];
 
   return (
-    <View className='px-3'>
+    <View className='pl-2'>
       {items.map((item: plantInfo, index) =>
         item.value ? (
           <View key={index}>
             <Text className='text-left text-primary'>{item.label} </Text>
 
-            <View className='align-center self-center    rounded-lg border-2 border-primaryDark bg-secondaryDark px-4 '>
+            <View className='align-center self-center    rounded-lg border-2 border-primaryDark bg-secondaryDark  '>
               <Text className='align-center items-baseline py-1 text-center'>{item.value}</Text>
             </View>
           </View>

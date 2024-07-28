@@ -62,21 +62,19 @@ export default function Plant() {
       <Background>
         <Stack.Screen options={{ title: plantData.name, headerBackTitle: "All Plants" }} />
         <View className='flex'>
-          <View className='height-200 flex w-full flex-row justify-around pt-2'>
-            <View className='m-2'>
+          <View className='height-200 flex w-full flex-row  pt-2'>
+            <View className='m-1 w-1/2'>
               <PlantInfo
                 plantData={plantData}
                 areaData={areaData}
               />
             </View>
-            <View className='m-2'>
-              <View className='h-64 w-64'>
-                <PlantPhoto
-                  plant={plantData}
-                  height='64'
-                  width='full'
-                />
-              </View>
+            <View className='m-1 w-1/2'>
+              <PlantPhoto
+                plant={plantData}
+                height='64'
+                width='full'
+              />
             </View>
           </View>
 
