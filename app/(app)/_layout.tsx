@@ -67,12 +67,6 @@ export default function TabLayout() {
           title: "My Plants",
           drawerIcon: ({ color }) => <Flower2 color={color} />,
           headerRight: () => <CreateNewPlant />,
-          headerSearchBarOptions: {
-            placeholder: "Search",
-            onChangeText: (event) => {
-              console.log(event.nativeEvent.text);
-            },
-          },
         }}
       />
       <Drawer.Screen
@@ -81,12 +75,6 @@ export default function TabLayout() {
           title: "My Entries",
           drawerIcon: ({ color }) => <Entries color={color} />,
           headerRight: () => <CreateNewEntry />,
-          headerSearchBarOptions: {
-            placeholder: "Search",
-            onChangeText: (event) => {
-              console.log(event.nativeEvent.text);
-            },
-          },
         }}
       />
       <Drawer.Screen
@@ -95,12 +83,6 @@ export default function TabLayout() {
           title: "My Graveyard",
           drawerIcon: ({ color }) => <Graveyard color={color} />,
           //headerRight: () => <CreateNewPlant />,
-          headerSearchBarOptions: {
-            placeholder: "Search",
-            onChangeText: (event) => {
-              console.log(event.nativeEvent.text);
-            },
-          },
         }}
       />
       <Drawer.Screen
