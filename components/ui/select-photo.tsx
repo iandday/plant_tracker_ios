@@ -93,7 +93,7 @@ export default function SelectPhoto({ showModal, setShowModal, handleMutate }: s
         <Button
           label='Take New Picture'
           onPress={() => {
-            captureImage;
+            captureImage();
           }}
           variant='default'
           fullWidth={false}
