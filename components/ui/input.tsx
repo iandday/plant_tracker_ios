@@ -1,10 +1,5 @@
 import * as React from "react";
-import type {
-  Control,
-  FieldValues,
-  Path,
-  RegisterOptions,
-} from "react-hook-form";
+import type { Control, FieldValues, Path, RegisterOptions } from "react-hook-form";
 import { useController } from "react-hook-form";
 import type { TextInput, TextInputProps } from "react-native";
 import { I18nManager, StyleSheet, View } from "react-native";
@@ -52,10 +47,7 @@ export interface NInputProps extends TextInputProps {
   error?: string;
 }
 
-type TRule = Omit<
-  RegisterOptions,
-  "valueAsNumber" | "valueAsDate" | "setValueAs"
->;
+type TRule = Omit<RegisterOptions, "valueAsNumber" | "valueAsDate" | "setValueAs">;
 
 export type RuleType<T> = { [name in keyof T]: TRule };
 export type InputControllerType<T extends FieldValues> = {
@@ -64,9 +56,7 @@ export type InputControllerType<T extends FieldValues> = {
   rules?: TRule;
 };
 
-interface ControlledInputProps<T extends FieldValues>
-  extends NInputProps,
-    InputControllerType<T> {}
+interface ControlledInputProps<T extends FieldValues> extends NInputProps, InputControllerType<T> {}
 
 export const Input = React.forwardRef<TextInput, NInputProps>((props, ref) => {
   const { label, error, testID, className, ...inputProps } = props;
@@ -89,8 +79,8 @@ export const Input = React.forwardRef<TextInput, NInputProps>((props, ref) => {
   // );
 
   return (
-    <View className="">
-      {label && <Text className="text-primary">{label}</Text>}
+    <View className='flex-1'>
+      {label && <Text className='text-primary'>{label}</Text>}
       <NTextInput
         ref={ref}
         //placeholderTextColor={colors.neutral[400]}
@@ -101,19 +91,13 @@ export const Input = React.forwardRef<TextInput, NInputProps>((props, ref) => {
 
         //style={StyleSheet.flatten([inputProps.style])}
       />
-      {error && (
-        <Text className="text-sm text-danger-400 dark:text-danger-600">
-          {error}
-        </Text>
-      )}
+      {error && <Text className='text-sm text-danger-400 dark:text-danger-600'>{error}</Text>}
     </View>
   );
 });
 
 // only used with react-hook-form
-export function ControlledInput<T extends FieldValues>(
-  props: ControlledInputProps<T>
-) {
+export function ControlledInput<T extends FieldValues>(props: ControlledInputProps<T>) {
   const { name, control, rules, className, ...inputProps } = props;
 
   const { field, fieldState } = useController({ control, name, rules });
@@ -121,7 +105,7 @@ export function ControlledInput<T extends FieldValues>(
     <Input
       ref={field.ref}
       className={className}
-      autoCapitalize="none"
+      autoCapitalize='none'
       onChangeText={field.onChange}
       value={(field.value as string) || ""}
       {...inputProps}

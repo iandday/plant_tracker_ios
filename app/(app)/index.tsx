@@ -62,7 +62,7 @@ export default function Index() {
     return <Text>Loading</Text>;
   }
 
-  if (plantData && graveyardData) {
+  if (plantData) {
     return (
       <SafeAreaView className='bg-background flex flex-1 flexfl-col items-stretch'>
         <View className='px-4 h-full'>

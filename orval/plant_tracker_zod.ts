@@ -637,3 +637,52 @@ export const trackerApiViewBulkBulkCreatePlantResponse = zod.object({
 })
 
 
+/**
+ * Search plant records
+ * @summary Search Plant
+ */
+export const trackerApiViewSearchSearchPlantQueryParams = zod.object({
+  "query": zod.string().optional(),
+  "graveyard_only": zod.boolean().optional(),
+  "alive_only": zod.boolean().optional()
+})
+
+export const trackerApiViewSearchSearchPlantResponseItem = zod.object({
+  "id": zod.string().uuid().optional(),
+  "name": zod.string(),
+  "common_name": zod.string().or(zod.null()).optional(),
+  "scientific_name": zod.string().or(zod.null()).optional(),
+  "purchase_date": zod.string().date().or(zod.null()).optional(),
+  "graveyard": zod.boolean().optional(),
+  "death_date": zod.string().date().or(zod.null()).optional(),
+  "main_photo": zod.string().or(zod.null()).optional(),
+  "notes": zod.string().or(zod.null()).optional(),
+  "area": zod.string().uuid(),
+  "user": zod.string().uuid()
+})
+export const trackerApiViewSearchSearchPlantResponse = zod.array(trackerApiViewSearchSearchPlantResponseItem)
+
+
+/**
+ * Search entry records
+ * @summary Search Entry
+ */
+export const trackerApiViewSearchSearchEntryQueryParams = zod.object({
+  "query": zod.string().optional(),
+  "graveyard_only": zod.boolean().optional(),
+  "alive_only": zod.boolean().optional()
+})
+
+export const trackerApiViewSearchSearchEntryResponseItem = zod.object({
+  "id": zod.string().uuid().optional(),
+  "Timestamp": zod.string().datetime(),
+  "plant": zod.string().uuid(),
+  "notes": zod.string().or(zod.null()).optional(),
+  "plant_health": zod.number(),
+  "photo": zod.string().or(zod.null()).optional(),
+  "user": zod.string().uuid(),
+  "activities": zod.array(zod.string())
+})
+export const trackerApiViewSearchSearchEntryResponse = zod.array(trackerApiViewSearchSearchEntryResponseItem)
+
+

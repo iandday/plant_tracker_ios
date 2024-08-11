@@ -6,7 +6,6 @@ import { Text } from "~/components/ui/text";
 import { Background } from "~/components/background";
 import axiosInstance from "~/provider/custom-axios";
 import { FlatList, ScrollView } from "react-native-gesture-handler";
-import { ListItem, SearchBar } from "react-native-elements";
 import filter from "lodash.filter";
 import { useNavigation } from "expo-router";
 import {
@@ -14,64 +13,69 @@ import {
   useTrackerApiViewAreaListAreas,
   useTrackerApiViewEntryListEntries,
   useTrackerApiViewPlantListPlants,
+  useTrackerApiViewSearchSearchEntry,
 } from "~/lib/plant_tracker/endpoints/PlantTrackerFromFileSpecWithTransformer";
 import { EntryOut, PlantOut } from "~/lib/plant_tracker/model";
 import { EntryCard } from "~/components/entry-card";
+import SearchBar from "~/components/search-bar";
+
+type renderItemProps = {
+  item: EntryOut;
+};
 
 export default function MyEntries() {
   const navigation = useNavigation();
+  const [search, setSearch] = useState<string>("");
   const {
     isLoading: entryIsLoading,
-    isError: entryisError,
+    isPending: entryIsPending,
+    isError: entryIsError,
     error: entryError,
     data: entryData,
-  } = useTrackerApiViewEntryListEntries();
+  } = useTrackerApiViewSearchSearchEntry({ query: search });
+
   const {
     isLoading: activityIsLoading,
     isError: activityisError,
     error: activityError,
     data: activityData,
   } = useTrackerApiViewActivityListActivities();
+
   const {
     isLoading: plantIsLoading,
     isError: plantisError,
     error: plantError,
     data: plantData,
-  } = useTrackerApiViewPlantListPlants({ exclude_graveyard: false });
-
-  useEffect(() => {
-    const fetchData = async () => {
-      navigation.setOptions({
-        headerSearchBarOptions: {
-          onChangeText: (text: string) => console.log(text),
-        },
-      });
-    };
-    fetchData();
-  }, [navigation]);
-
-  type renderItemProps = {
-    item: EntryOut;
-  };
+  } = useTrackerApiViewPlantListPlants();
 
   const renderItem = ({ item }: renderItemProps) => (
     <EntryCard
       entry={item}
+      key={item.id}
       activityData={activityData!}
       plantData={plantData!.filter((x) => x.id === item.plant)[0]}
     />
   );
 
-  if (entryIsLoading || activityIsLoading || plantIsLoading) {
+  if (activityIsLoading || plantIsLoading) {
     return <Text>Loading</Text>;
   }
-  if (entryData && activityData && plantData) {
+  if (activityData && plantData) {
     return (
       <Background>
-        <FlatList
-          data={entryData.sort((a: EntryOut, b: EntryOut) => a.plant.localeCompare(b.plant))}
-          renderItem={renderItem}
+        <SearchBar
+          search={search}
+          setSearch={setSearch}
         />
+
+        {entryData ? (
+          <FlatList
+            data={entryData.sort((a: EntryOut, b: EntryOut) => a.plant.localeCompare(b.plant))}
+            renderItem={renderItem}
+          />
+        ) : (
+          <Text>No Results</Text>
+        )}
       </Background>
     );
   }

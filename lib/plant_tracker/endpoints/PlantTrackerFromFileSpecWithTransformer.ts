@@ -41,6 +41,8 @@ import type {
   TrackerApiViewPlantCreatePlantBody,
   TrackerApiViewPlantListPlantsParams,
   TrackerApiViewPlantPostPlantBody,
+  TrackerApiViewSearchSearchEntryParams,
+  TrackerApiViewSearchSearchPlantParams,
   UserSchema,
 } from "../model";
 import { customInstance } from "../mutator/custom-instance";
@@ -3269,4 +3271,328 @@ export const useTrackerApiViewBulkBulkCreatePlant = <
     getTrackerApiViewBulkBulkCreatePlantMutationOptions(options);
 
   return useMutation(mutationOptions);
+};
+
+/**
+ * Search plant records
+ * @summary Search Plant
+ */
+export const trackerApiViewSearchSearchPlant = (
+  params?: TrackerApiViewSearchSearchPlantParams,
+  signal?: AbortSignal,
+) => {
+  return customInstance<PlantOut[]>({
+    url: `/api/search/plant`,
+    method: "GET",
+    params,
+    signal,
+  });
+};
+
+export const getTrackerApiViewSearchSearchPlantQueryKey = (
+  params?: TrackerApiViewSearchSearchPlantParams,
+) => {
+  return [`/api/search/plant`, ...(params ? [params] : [])] as const;
+};
+
+export const getTrackerApiViewSearchSearchPlantQueryOptions = <
+  TData = Awaited<ReturnType<typeof trackerApiViewSearchSearchPlant>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: TrackerApiViewSearchSearchPlantParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof trackerApiViewSearchSearchPlant>>,
+        TError,
+        TData
+      >
+    >;
+  },
+) => {
+  const { query: queryOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ??
+    getTrackerApiViewSearchSearchPlantQueryKey(params);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof trackerApiViewSearchSearchPlant>>
+  > = ({ signal }) => trackerApiViewSearchSearchPlant(params, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof trackerApiViewSearchSearchPlant>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type TrackerApiViewSearchSearchPlantQueryResult = NonNullable<
+  Awaited<ReturnType<typeof trackerApiViewSearchSearchPlant>>
+>;
+export type TrackerApiViewSearchSearchPlantQueryError = ErrorType<unknown>;
+
+/**
+ * @summary Search Plant
+ */
+export const useTrackerApiViewSearchSearchPlant = <
+  TData = Awaited<ReturnType<typeof trackerApiViewSearchSearchPlant>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: TrackerApiViewSearchSearchPlantParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof trackerApiViewSearchSearchPlant>>,
+        TError,
+        TData
+      >
+    >;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+  const queryOptions = getTrackerApiViewSearchSearchPlantQueryOptions(
+    params,
+    options,
+  );
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+};
+
+export const getTrackerApiViewSearchSearchPlantSuspenseQueryOptions = <
+  TData = Awaited<ReturnType<typeof trackerApiViewSearchSearchPlant>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: TrackerApiViewSearchSearchPlantParams,
+  options?: {
+    query?: Partial<
+      UseSuspenseQueryOptions<
+        Awaited<ReturnType<typeof trackerApiViewSearchSearchPlant>>,
+        TError,
+        TData
+      >
+    >;
+  },
+) => {
+  const { query: queryOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ??
+    getTrackerApiViewSearchSearchPlantQueryKey(params);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof trackerApiViewSearchSearchPlant>>
+  > = ({ signal }) => trackerApiViewSearchSearchPlant(params, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseSuspenseQueryOptions<
+    Awaited<ReturnType<typeof trackerApiViewSearchSearchPlant>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type TrackerApiViewSearchSearchPlantSuspenseQueryResult = NonNullable<
+  Awaited<ReturnType<typeof trackerApiViewSearchSearchPlant>>
+>;
+export type TrackerApiViewSearchSearchPlantSuspenseQueryError =
+  ErrorType<unknown>;
+
+/**
+ * @summary Search Plant
+ */
+export const useTrackerApiViewSearchSearchPlantSuspense = <
+  TData = Awaited<ReturnType<typeof trackerApiViewSearchSearchPlant>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: TrackerApiViewSearchSearchPlantParams,
+  options?: {
+    query?: Partial<
+      UseSuspenseQueryOptions<
+        Awaited<ReturnType<typeof trackerApiViewSearchSearchPlant>>,
+        TError,
+        TData
+      >
+    >;
+  },
+): UseSuspenseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+  const queryOptions = getTrackerApiViewSearchSearchPlantSuspenseQueryOptions(
+    params,
+    options,
+  );
+
+  const query = useSuspenseQuery(queryOptions) as UseSuspenseQueryResult<
+    TData,
+    TError
+  > & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+};
+
+/**
+ * Search entry records
+ * @summary Search Entry
+ */
+export const trackerApiViewSearchSearchEntry = (
+  params?: TrackerApiViewSearchSearchEntryParams,
+  signal?: AbortSignal,
+) => {
+  return customInstance<EntryOut[]>({
+    url: `/api/search/entry`,
+    method: "GET",
+    params,
+    signal,
+  });
+};
+
+export const getTrackerApiViewSearchSearchEntryQueryKey = (
+  params?: TrackerApiViewSearchSearchEntryParams,
+) => {
+  return [`/api/search/entry`, ...(params ? [params] : [])] as const;
+};
+
+export const getTrackerApiViewSearchSearchEntryQueryOptions = <
+  TData = Awaited<ReturnType<typeof trackerApiViewSearchSearchEntry>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: TrackerApiViewSearchSearchEntryParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof trackerApiViewSearchSearchEntry>>,
+        TError,
+        TData
+      >
+    >;
+  },
+) => {
+  const { query: queryOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ??
+    getTrackerApiViewSearchSearchEntryQueryKey(params);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof trackerApiViewSearchSearchEntry>>
+  > = ({ signal }) => trackerApiViewSearchSearchEntry(params, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof trackerApiViewSearchSearchEntry>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type TrackerApiViewSearchSearchEntryQueryResult = NonNullable<
+  Awaited<ReturnType<typeof trackerApiViewSearchSearchEntry>>
+>;
+export type TrackerApiViewSearchSearchEntryQueryError = ErrorType<unknown>;
+
+/**
+ * @summary Search Entry
+ */
+export const useTrackerApiViewSearchSearchEntry = <
+  TData = Awaited<ReturnType<typeof trackerApiViewSearchSearchEntry>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: TrackerApiViewSearchSearchEntryParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof trackerApiViewSearchSearchEntry>>,
+        TError,
+        TData
+      >
+    >;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+  const queryOptions = getTrackerApiViewSearchSearchEntryQueryOptions(
+    params,
+    options,
+  );
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+};
+
+export const getTrackerApiViewSearchSearchEntrySuspenseQueryOptions = <
+  TData = Awaited<ReturnType<typeof trackerApiViewSearchSearchEntry>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: TrackerApiViewSearchSearchEntryParams,
+  options?: {
+    query?: Partial<
+      UseSuspenseQueryOptions<
+        Awaited<ReturnType<typeof trackerApiViewSearchSearchEntry>>,
+        TError,
+        TData
+      >
+    >;
+  },
+) => {
+  const { query: queryOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ??
+    getTrackerApiViewSearchSearchEntryQueryKey(params);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof trackerApiViewSearchSearchEntry>>
+  > = ({ signal }) => trackerApiViewSearchSearchEntry(params, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseSuspenseQueryOptions<
+    Awaited<ReturnType<typeof trackerApiViewSearchSearchEntry>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type TrackerApiViewSearchSearchEntrySuspenseQueryResult = NonNullable<
+  Awaited<ReturnType<typeof trackerApiViewSearchSearchEntry>>
+>;
+export type TrackerApiViewSearchSearchEntrySuspenseQueryError =
+  ErrorType<unknown>;
+
+/**
+ * @summary Search Entry
+ */
+export const useTrackerApiViewSearchSearchEntrySuspense = <
+  TData = Awaited<ReturnType<typeof trackerApiViewSearchSearchEntry>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: TrackerApiViewSearchSearchEntryParams,
+  options?: {
+    query?: Partial<
+      UseSuspenseQueryOptions<
+        Awaited<ReturnType<typeof trackerApiViewSearchSearchEntry>>,
+        TError,
+        TData
+      >
+    >;
+  },
+): UseSuspenseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+  const queryOptions = getTrackerApiViewSearchSearchEntrySuspenseQueryOptions(
+    params,
+    options,
+  );
+
+  const query = useSuspenseQuery(queryOptions) as UseSuspenseQueryResult<
+    TData,
+    TError
+  > & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
 };
