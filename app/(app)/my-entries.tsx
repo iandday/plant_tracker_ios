@@ -57,9 +57,10 @@ export default function MyEntries() {
     />
   );
 
-  if (activityIsLoading || plantIsLoading) {
-    return <Text>Loading</Text>;
+  if (entryIsError) {
+    return <span>Error: {entryError.message}</span>;
   }
+
   if (activityData && plantData) {
     return (
       <Background>
@@ -67,8 +68,8 @@ export default function MyEntries() {
           search={search}
           setSearch={setSearch}
         />
-
-        {entryData ? (
+        {entryIsPending ? <Text>Loading Data</Text> : null}
+        {entryData && !entryIsPending ? (
           <FlatList
             data={entryData.sort((a: EntryOut, b: EntryOut) => a.plant.localeCompare(b.plant))}
             renderItem={renderItem}

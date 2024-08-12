@@ -31,10 +31,6 @@ export default function MyPlants() {
     data: plantData,
   } = useTrackerApiViewSearchSearchPlant({ alive_only: true, query: search });
 
-  if (plantIsPending) {
-    return <Text>Loading</Text>;
-  }
-
   if (plantIsError) {
     return <span>Error: {plantError.message}</span>;
   }
@@ -45,12 +41,17 @@ export default function MyPlants() {
         search={search}
         setSearch={setSearch}
       />
-      <FlatList
-        data={plantData.sort((a: PlantOut, b: PlantOut) => a.area.localeCompare(b.area))}
-        renderItem={renderItem}
-        //ListHeaderComponent={SearchBar({ search, setSearch })}
-        //stickyHeaderIndices={[0]}
-      />
+      {plantIsPending ? <Text>Loading Data</Text> : null}
+      {plantData && !plantIsPending ? (
+        <FlatList
+          data={plantData.sort((a: PlantOut, b: PlantOut) => a.area.localeCompare(b.area))}
+          renderItem={renderItem}
+          //ListHeaderComponent={SearchBar({ search, setSearch })}
+          //stickyHeaderIndices={[0]}
+        />
+      ) : (
+        <Text>No Results</Text>
+      )}
     </Background>
   );
 }
