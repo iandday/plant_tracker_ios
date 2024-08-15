@@ -61,23 +61,21 @@ export default function MyEntries() {
     return <span>Error: {entryError.message}</span>;
   }
 
-  if (activityData && plantData) {
-    return (
-      <Background>
-        <SearchBar
-          search={search}
-          setSearch={setSearch}
+  return (
+    <Background>
+      <SearchBar
+        search={search}
+        setSearch={setSearch}
+      />
+      {entryIsPending || plantIsLoading ? <Text>Loading Data</Text> : null}
+      {entryData && !entryIsPending && !plantIsLoading ? (
+        <FlatList
+          data={entryData.sort((a: EntryOut, b: EntryOut) => a.plant.localeCompare(b.plant))}
+          renderItem={renderItem}
         />
-        {entryIsPending ? <Text>Loading Data</Text> : null}
-        {entryData && !entryIsPending ? (
-          <FlatList
-            data={entryData.sort((a: EntryOut, b: EntryOut) => a.plant.localeCompare(b.plant))}
-            renderItem={renderItem}
-          />
-        ) : (
-          <Text>No Results</Text>
-        )}
-      </Background>
-    );
-  }
+      ) : (
+        <Text>No Results</Text>
+      )}
+    </Background>
+  );
 }
